@@ -1,0 +1,1094 @@
+[
+  {
+    "id": "merge-pdf",
+    "order": 1,
+    "name": "Merge PDF",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "mergePdf",
+    "purpose": "Combine several PDFs into one file, in the exact order you choose.",
+    "short": "Drag files into order, then merge them into a single PDF.",
+    "techShort": "PDF-lib",
+    "tech": "PDF-lib · File API · Blob",
+    "keywords": "merge pdf combine pdf join pdf files pdf merger offline",
+    "privacyNote": "Each PDF is read with the File API and copied page by page using PDF-lib inside this tab. No file, filename or byte count is transmitted.",
+    "steps": [
+      "Choose two or more PDFs. They are read locally and their page counts appear.",
+      "Reorder the list — drag the handle, or focus a row and use the arrow buttons.",
+      "Press Merge. PDF-lib copies every page into a new document in list order.",
+      "Download the merged file, or reset to release the buffers."
+    ],
+    "example": {
+      "title": "Combining a signed contract, an appendix and a cover sheet",
+      "body": "Add the cover sheet first, the signed contract second and the appendix last. The list order is the page order, so no post-merge page shuffling is needed. The merged file keeps each source page at its original size, including mixed A4 and Letter documents."
+    },
+    "does": [
+      "Unlimited file count, limited only by available tab memory",
+      "Drag-and-drop reordering with keyboard move up / move down controls",
+      "Per-file page counts shown before you commit",
+      "Encrypted PDFs are reported instead of silently skipped"
+    ],
+    "doesnt": [
+      "Encrypted PDFs must be unlocked in a desktop reader first — this tool will not guess a password.",
+      "Form field values are preserved only when the source documents are unencrypted and standard AcroForm.",
+      "Very large jobs (hundreds of megabytes) can exhaust tab memory; the tool warns before starting."
+    ],
+    "faq": [
+      {
+        "q": "Are my files uploaded to a server?",
+        "a": "No. The merge runs in the tab with PDF-lib. You can confirm it yourself: open DevTools, switch to the Network tab, and merge a file — no request carrying file data appears."
+      },
+      {
+        "q": "Why does an encrypted PDF fail?",
+        "a": "An encrypted PDF stores its page tree behind an encryption dictionary. Decrypting requires the password, and this tool has no password field, so it reports the file as unsupported rather than producing a corrupt output."
+      },
+      {
+        "q": "Does merging reduce quality?",
+        "a": "No. Pages are copied as page objects, not re-rendered, so text stays selectable and images keep their original encoding."
+      }
+    ],
+    "related": [
+      "split-pdf",
+      "reorder-pdf-pages",
+      "extract-pdf-pages"
+    ],
+    "training": [
+      "how-to-merge-pdfs-in-your-browser",
+      "merge-vs-portfolio-vs-attachment"
+    ]
+  },
+  {
+    "id": "split-pdf",
+    "order": 2,
+    "name": "Split PDF",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "splitPdf",
+    "purpose": "Split one PDF into separate documents by page range or one page per file.",
+    "short": "Cut a document into ranges, or explode it into single pages.",
+    "techShort": "PDF-lib",
+    "tech": "PDF-lib · JSZip · Blob",
+    "keywords": "split pdf pdf splitter separate pdf pages pdf ranges",
+    "privacyNote": "Splitting happens with PDF-lib in the tab. Output files are assembled as in-memory Blobs and only exist on your disk after you download them.",
+    "steps": [
+      "Choose one PDF and read the page count.",
+      "Pick a mode: ranges or one file per page.",
+      "Enter ranges if needed — the tool shows how many files will be produced.",
+      "Download the ZIP, or download individual parts."
+    ],
+    "example": {
+      "title": "Separating chapters from a 42-page report",
+      "body": "Enter 1-2, 3-18, 19-40, 41-42 to get four files: front matter, chapter one, chapter two and the appendix. The tool previews “4 files” before you run it, so a typo in the range list is caught immediately."
+    },
+    "does": [
+      "Split by custom ranges such as 1-3, 4, 8-12",
+      "Split into one file per page",
+      "Download every result as a single ZIP",
+      "Range syntax is validated before any work starts"
+    ],
+    "doesnt": [
+      "Output filenames are derived from the source name and sanitised.",
+      "A 500-page document produces 500 entries in the ZIP; expect a few seconds of work."
+    ],
+    "faq": [
+      {
+        "q": "Can I split by bookmarks or a table of contents?",
+        "a": "Not currently. Bookmark outlines vary a lot between producers; ranges are predictable and verifiable, so they are the only split mode shipped."
+      },
+      {
+        "q": "What happens to annotations?",
+        "a": "Page annotations travel with their page, because the page object is copied intact. Document-level attachments are not carried over."
+      },
+      {
+        "q": "Is the ZIP created locally?",
+        "a": "Yes. JSZip assembles the archive in the tab from Blobs that already exist in memory."
+      }
+    ],
+    "related": [
+      "extract-pdf-pages",
+      "merge-pdf",
+      "reorder-pdf-pages"
+    ],
+    "training": []
+  },
+  {
+    "id": "extract-pdf-pages",
+    "order": 3,
+    "name": "Extract PDF Pages",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "extractPdfPages",
+    "purpose": "Copy selected pages from a PDF into a new, smaller document.",
+    "short": "Pick the pages you need and drop the rest.",
+    "techShort": "PDF-lib",
+    "tech": "PDF-lib · File API",
+    "keywords": "extract pdf pages pdf page extractor save pdf pages",
+    "privacyNote": "Only the pages you select are written to the new document. The source file stays in tab memory and is released on reset.",
+    "steps": [
+      "Choose a PDF.",
+      "Type the pages you want, for example 2, 5-7, 11.",
+      "Check the selected-page count.",
+      "Extract and download."
+    ],
+    "example": {
+      "title": "Pulling three invoice pages out of a statement",
+      "body": "A 60-page statement contains three invoices you need to forward. Enter the three page numbers, extract, and download a 3-page PDF that opens at the same size as the original."
+    },
+    "does": [
+      "Comma-separated page lists and ranges",
+      "Live count of selected pages",
+      "Keeps original page geometry",
+      "Works with mixed page sizes"
+    ],
+    "doesnt": [
+      "Out-of-range page numbers are rejected with the exact offending value.",
+      "Digital signatures are invalidated by any page-tree change — that is inherent to editing a signed PDF."
+    ],
+    "faq": [
+      {
+        "q": "Does extraction re-compress images?",
+        "a": "No. Pages are copied as objects, so image streams are untouched."
+      },
+      {
+        "q": "Can I extract pages in a different order?",
+        "a": "Yes — the order you type is the order written, so 5, 2, 9 produces a document in that sequence."
+      },
+      {
+        "q": "Why is my signature now invalid?",
+        "a": "A digital signature covers the exact bytes of the original file. Any page-tree change produces a new document, so the old signature no longer matches."
+      }
+    ],
+    "related": [
+      "split-pdf",
+      "reorder-pdf-pages",
+      "merge-pdf"
+    ],
+    "training": []
+  },
+  {
+    "id": "rotate-pdf-pages",
+    "order": 4,
+    "name": "Rotate PDF Pages",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "rotatePdfPages",
+    "purpose": "Rotate every page or a single page by 90, 180 or 270 degrees.",
+    "short": "Fix sideways scans without re-rendering the document.",
+    "techShort": "PDF-lib",
+    "tech": "PDF-lib",
+    "keywords": "rotate pdf turn pdf pages fix sideways pdf",
+    "privacyNote": "Rotation sets the page /Rotate entry with PDF-lib in the tab. The content stream is not re-rendered, so text stays sharp.",
+    "steps": [
+      "Choose a PDF and look at the page list.",
+      "Select all pages or a subset.",
+      "Choose 90°, 180° or 270°.",
+      "Apply, then download."
+    ],
+    "example": {
+      "title": "Fixing a sideways phone scan",
+      "body": "A 4-page scan arrives rotated 90°. Select all pages, choose 90° clockwise, apply. The file size barely changes because only the rotation attribute moved."
+    },
+    "does": [
+      "Rotate all pages or a page range",
+      "90° increments, applied cumulatively",
+      "Preview thumbnails show current orientation",
+      "No quality loss — the content stream is untouched"
+    ],
+    "doesnt": [
+      "Rotation is a page attribute, so a viewer that ignores /Rotate will show the original orientation.",
+      "Scanned pages with baked-in rotation need re-rendering, which this tool does not do."
+    ],
+    "faq": [
+      {
+        "q": "Is the file re-encoded?",
+        "a": "No. Only the page dictionary changes, so text and images are byte-identical to the source."
+      },
+      {
+        "q": "Can I rotate just page 3?",
+        "a": "Yes. Enter 3 in the page field and leave the rest alone."
+      },
+      {
+        "q": "Why does my viewer ignore the rotation?",
+        "a": "A few legacy viewers ignore /Rotate. Modern browsers, Preview and Acrobat all honour it."
+      }
+    ],
+    "related": [
+      "reorder-pdf-pages",
+      "add-pdf-page-numbers",
+      "merge-pdf"
+    ],
+    "training": []
+  },
+  {
+    "id": "reorder-pdf-pages",
+    "order": 5,
+    "name": "Reorder PDF Pages",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "reorderPdfPages",
+    "purpose": "Rearrange the page order of a PDF with drag or keyboard controls.",
+    "short": "Put pages in the right order, with a keyboard path for every move.",
+    "techShort": "PDF-lib",
+    "tech": "PDF-lib · PDF.js",
+    "keywords": "reorder pdf pages rearrange pdf move pdf pages",
+    "privacyNote": "Page order is rewritten with PDF-lib inside the tab. Thumbnails are rendered locally by PDF.js and never leave the page.",
+    "steps": [
+      "Choose a PDF — thumbnails render page by page.",
+      "Drag a thumbnail, or focus it and press the move buttons.",
+      "Check the order in the filmstrip.",
+      "Save the reordered document."
+    ],
+    "example": {
+      "title": "Moving an errant page 12 to the front",
+      "body": "Focus page 12's tile and press “Move to start”, or drag it to position 1. The filmstrip numbers update immediately so you can verify before saving."
+    },
+    "does": [
+      "Live thumbnails of every page",
+      "Drag to reorder, or move with the arrow buttons",
+      "Reverse-all and reset shortcuts",
+      "Selected-page counter"
+    ],
+    "doesnt": [
+      "Thumbnail rendering is capped for very long documents; pages beyond the cap still reorder correctly.",
+      "Reordering a signed document invalidates its signature."
+    ],
+    "faq": [
+      {
+        "q": "Is drag the only way to reorder?",
+        "a": "No. Every tile has move-left, move-right, move-to-start and move-to-end buttons, so the whole flow works from the keyboard."
+      },
+      {
+        "q": "Do bookmarks follow the pages?",
+        "a": "Named destinations that point at moved pages follow their page object. Outline order is not rewritten."
+      },
+      {
+        "q": "Can I delete pages here?",
+        "a": "No. Use Split or Extract to produce a document without the pages you do not want."
+      }
+    ],
+    "related": [
+      "rotate-pdf-pages",
+      "merge-pdf",
+      "split-pdf"
+    ],
+    "training": []
+  },
+  {
+    "id": "images-to-pdf",
+    "order": 6,
+    "name": "Images to PDF",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "imagesToPdf",
+    "purpose": "Turn JPG, PNG and WebP images into a paginated PDF at the size you choose.",
+    "short": "One image per page, with page size and margin control.",
+    "techShort": "Canvas",
+    "tech": "Canvas · PDF-lib",
+    "keywords": "images to pdf jpg to pdf png to pdf photo to pdf",
+    "privacyNote": "Images are decoded by the browser and embedded with PDF-lib locally. No image data is transmitted.",
+    "steps": [
+      "Select the images in the order you want them.",
+      "Choose a page size and margin.",
+      "Convert — each image is drawn to fit inside the page box.",
+      "Download the PDF."
+    ],
+    "example": {
+      "title": "Building a photo appendix on A4",
+      "body": "Twelve phone photos, A4 portrait, 12 mm margins. Each photo is scaled to fit inside the printable area with its aspect ratio preserved, producing a 12-page appendix that prints without cropping."
+    },
+    "does": [
+      "JPG, PNG and WebP input",
+      "A4, Letter, or fit-to-image page sizing",
+      "Configurable margin and image quality",
+      "Order control before conversion"
+    ],
+    "doesnt": [
+      "Each image becomes one page — multi-image pages are not supported.",
+      "Very large images are downscaled to a configurable maximum edge to protect tab memory."
+    ],
+    "faq": [
+      {
+        "q": "Do transparent PNGs keep transparency?",
+        "a": "PDF pages are opaque. Transparent areas are composited onto white, which is what most printers assume anyway."
+      },
+      {
+        "q": "What quality setting should I use?",
+        "a": "0.85 is a good default for photos. Use 0.95 for text screenshots, where JPEG artefacts are most visible."
+      },
+      {
+        "q": "Can I mix portrait and landscape?",
+        "a": "Yes, choose “Fit to image” so each page takes the orientation of its image."
+      }
+    ],
+    "related": [
+      "pdf-to-images",
+      "image-resizer",
+      "merge-pdf"
+    ],
+    "training": []
+  },
+  {
+    "id": "pdf-to-images",
+    "order": 7,
+    "name": "PDF to Images",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "pdfToImages",
+    "purpose": "Render PDF pages to PNG, JPG or WebP at a resolution you control.",
+    "short": "Page-by-page raster export with a real DPI control.",
+    "techShort": "PDF.js",
+    "tech": "PDF.js · Canvas · JSZip",
+    "keywords": "pdf to jpg pdf to png pdf to image render pdf pages",
+    "privacyNote": "PDF.js renders each page into a canvas in this tab. The canvas is exported to a Blob; nothing is uploaded.",
+    "steps": [
+      "Choose a PDF; the first page renders as a preview.",
+      "Set the page range, output format and scale.",
+      "Render — progress is shown per page.",
+      "Download a single image or the ZIP."
+    ],
+    "example": {
+      "title": "Exporting slides for a design review",
+      "body": "A 20-page deck exported as PNG at 2× scale gives crisp screenshots for a review doc. JPG at 0.8 quality produces roughly a fifth of the bytes when the deck is mostly photography."
+    },
+    "does": [
+      "PNG, JPG and WebP output",
+      "Scale control from 72 to 300 DPI equivalent",
+      "Export all pages as a ZIP",
+      "Page range selection"
+    ],
+    "doesnt": [
+      "Fonts that rely on system substitution may render slightly differently from a desktop reader.",
+      "300 DPI on a large page produces a big canvas — the tool warns before allocating."
+    ],
+    "faq": [
+      {
+        "q": "Which format should I choose?",
+        "a": "PNG for text and UI, JPG for photos, WebP when you need both and the target supports it."
+      },
+      {
+        "q": "Why is my scanned PDF slow to render?",
+        "a": "Scanned pages are large embedded images; PDF.js must decode them before drawing. The progress bar reflects real work, not a fake delay."
+      },
+      {
+        "q": "Is the text layer preserved in the image?",
+        "a": "No — raster export produces pixels. Use PDF Text Extractor when you need the characters."
+      }
+    ],
+    "related": [
+      "pdf-text-extractor",
+      "images-to-pdf",
+      "image-format-converter"
+    ],
+    "training": []
+  },
+  {
+    "id": "pdf-text-extractor",
+    "order": 8,
+    "name": "PDF Text Extractor",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "pdfTextExtractor",
+    "purpose": "Pull the text layer out of a PDF, page by page, with an honest warning about scans.",
+    "short": "Extract selectable text; scanned pages are reported as image-only.",
+    "techShort": "PDF.js",
+    "tech": "PDF.js",
+    "keywords": "pdf text extractor extract text from pdf pdf to txt",
+    "privacyNote": "Text extraction runs through PDF.js in the tab. Extracted text is never sent anywhere, not even to analytics.",
+    "steps": [
+      "Choose a PDF.",
+      "Extract — each page is parsed and its text layer read.",
+      "Review pages flagged as image-only.",
+      "Copy the text or download it as a text file."
+    ],
+    "example": {
+      "title": "Checking whether a contract is searchable",
+      "body": "Extract text from a 30-page contract. If pages 1–12 return text and 13–30 return nothing, the second half is a scan and needs OCR elsewhere. The page-by-page report makes that boundary obvious."
+    },
+    "does": [
+      "Per-page text extraction with page markers",
+      "Detects pages that contain no text layer",
+      "Copy or download as .txt",
+      "Character and word counts"
+    ],
+    "doesnt": [
+      "This is not OCR. A scanned page has no text layer, and the tool says so instead of inventing characters.",
+      "Multi-column layouts may interleave lines in reading order that differs from the visual order."
+    ],
+    "faq": [
+      {
+        "q": "Can this tool read scanned documents?",
+        "a": "No. Text extraction reads an existing text layer. Recognising glyphs in an image is OCR, which is a different and much heavier operation."
+      },
+      {
+        "q": "Why is the order of lines odd in a two-column paper?",
+        "a": "PDF stores text in drawing order, not reading order. Multi-column documents often need manual reordering after extraction."
+      },
+      {
+        "q": "Are ligatures preserved?",
+        "a": "PDF.js maps common ligatures to their component characters. Unusual embedded fonts may produce replacement characters."
+      }
+    ],
+    "related": [
+      "pdf-metadata-cleaner",
+      "pdf-to-images",
+      "add-pdf-watermark"
+    ],
+    "training": [
+      "text-pdfs-vs-scanned-pdfs"
+    ]
+  },
+  {
+    "id": "pdf-metadata-cleaner",
+    "order": 9,
+    "name": "PDF Metadata Viewer & Cleaner",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "pdfMetadata",
+    "purpose": "Inspect a PDF's document information dictionary, then strip the fields you choose.",
+    "short": "See exactly which metadata fields exist before removing them.",
+    "techShort": "PDF-lib",
+    "tech": "PDF-lib · File API",
+    "keywords": "pdf metadata remove pdf author pdf properties cleaner",
+    "privacyNote": "Metadata is read and rewritten locally. The tool lists every field it will remove — nothing is deleted silently.",
+    "steps": [
+      "Choose a PDF.",
+      "Review the field table — empty fields are marked.",
+      "Tick the fields to remove, or clear all.",
+      "Save the cleaned copy."
+    ],
+    "example": {
+      "title": "Removing an author name before sharing a draft",
+      "body": "The info dictionary lists Author and Creator. Remove both, keep Title and Subject, and save. The output is a new file; the original is untouched on disk."
+    },
+    "does": [
+      "Shows Title, Author, Subject, Keywords, Creator, Producer and dates",
+      "Field-by-field removal with checkboxes",
+      "Reports XMP presence",
+      "Explains what removal cannot reach"
+    ],
+    "doesnt": [
+      "Embedded XMP packets are reported but not rewritten; some producers store metadata there as well as in the info dictionary.",
+      "Digital signatures and incremental updates may still contain the original values."
+    ],
+    "faq": [
+      {
+        "q": "Does this remove all traces of the author?",
+        "a": "No. It clears the fields you select in the document information dictionary. XMP metadata, embedded fonts and revision history can still carry information."
+      },
+      {
+        "q": "Why does the Producer field keep coming back?",
+        "a": "Some libraries re-add a Producer value when saving. This tool writes an empty string for removed fields, which most viewers display as blank."
+      },
+      {
+        "q": "Is the original file modified?",
+        "a": "Never. You get a new download; the source file on your disk is only read."
+      }
+    ],
+    "related": [
+      "remove-image-metadata",
+      "pdf-text-extractor",
+      "add-pdf-watermark"
+    ],
+    "training": []
+  },
+  {
+    "id": "add-pdf-page-numbers",
+    "order": 10,
+    "name": "Add PDF Page Numbers",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "addPageNumbers",
+    "purpose": "Stamp page numbers onto a PDF with control over position, format and start value.",
+    "short": "Number pages without touching the original layout.",
+    "techShort": "PDF-lib",
+    "tech": "PDF-lib · StandardFonts",
+    "keywords": "add page numbers to pdf pdf pagination number pdf pages",
+    "privacyNote": "Numbers are drawn with PDF-lib as a text overlay in the tab. Your document never leaves the device.",
+    "steps": [
+      "Choose a PDF.",
+      "Pick a position, format and starting number.",
+      "Preview the placement description.",
+      "Apply and download."
+    ],
+    "example": {
+      "title": "Numbering an appendix that starts at A-1",
+      "body": "Choose the “1 / 12” format, start at 1 and apply to pages 3–14 only, so the cover and contents stay unnumbered while the appendix counts from one."
+    },
+    "does": [
+      "Six positions: four corners plus bottom/top centre",
+      "Formats: 1, 1 / 12, Page 1, - 1 -",
+      "Custom starting number and page range",
+      "Font size and margin control"
+    ],
+    "doesnt": [
+      "Standard fonts only, so non-Latin digits are not supported.",
+      "Numbers are drawn on top of page content; an existing footer may need a larger margin."
+    ],
+    "faq": [
+      {
+        "q": "Can I skip the first page?",
+        "a": "Yes. Set the page range to start at 2."
+      },
+      {
+        "q": "Will the numbers cover existing content?",
+        "a": "They are drawn at the margin you set. Increase the margin if the footer already has content."
+      },
+      {
+        "q": "Are the numbers selectable text?",
+        "a": "Yes, they are drawn as real text with a standard font, so they remain searchable."
+      }
+    ],
+    "related": [
+      "add-pdf-watermark",
+      "reorder-pdf-pages",
+      "rotate-pdf-pages"
+    ],
+    "training": []
+  },
+  {
+    "id": "add-pdf-watermark",
+    "order": 11,
+    "name": "Add PDF Watermark",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "addWatermark",
+    "purpose": "Stamp diagonal or horizontal text across PDF pages with adjustable opacity.",
+    "short": "Mark drafts and confidential copies with a text watermark.",
+    "techShort": "PDF-lib",
+    "tech": "PDF-lib · StandardFonts",
+    "keywords": "pdf watermark stamp pdf draft watermark pdf",
+    "privacyNote": "The watermark is drawn with PDF-lib in the tab. Your text and your document both stay local.",
+    "steps": [
+      "Choose a PDF.",
+      "Type the watermark text.",
+      "Set angle, opacity and size.",
+      "Apply and download."
+    ],
+    "example": {
+      "title": "Marking a review copy as DRAFT",
+      "body": "“DRAFT” at 45°, 0.18 opacity, 64 pt, applied to every page. At that opacity the text is readable on screen but the underlying page stays legible when printed."
+    },
+    "does": [
+      "Diagonal or horizontal placement",
+      "Opacity, size and colour controls",
+      "Apply to all pages or a range",
+      "Repeats across wide pages so long documents stay marked"
+    ],
+    "doesnt": [
+      "Text watermarks only — image or logo watermarks are not supported.",
+      "Standard fonts only, so non-Latin scripts are not available."
+    ],
+    "faq": [
+      {
+        "q": "Can the watermark be removed?",
+        "a": "It is drawn into the page content, so removing it requires editing the PDF. It is a deterrent and a label, not DRM."
+      },
+      {
+        "q": "Why is my watermark faint on a dark page?",
+        "a": "Watermark colour defaults to grey. Pick a lighter colour for dark pages."
+      },
+      {
+        "q": "Does it work on rotated pages?",
+        "a": "Yes. The overlay is drawn in the page's own coordinate space, so it follows the rotation."
+      }
+    ],
+    "related": [
+      "add-pdf-page-numbers",
+      "pdf-metadata-cleaner",
+      "merge-pdf"
+    ],
+    "training": []
+  },
+  {
+    "id": "compress-pdf",
+    "order": 12,
+    "name": "Compress PDF",
+    "cat": "pdf",
+    "engine": "pdf",
+    "mount": "compressPdf",
+    "purpose": "Re-encode a PDF's images at a lower resolution and quality, with an honest report of what changed.",
+    "short": "Real image re-encoding, with a before/after size report.",
+    "techShort": "PDF.js",
+    "tech": "PDF.js · Canvas · PDF-lib",
+    "keywords": "compress pdf reduce pdf size pdf compressor offline",
+    "privacyNote": "Pages are rendered with PDF.js and rebuilt with PDF-lib in the tab. Nothing is uploaded and no server-side compressor is involved.",
+    "steps": [
+      "Choose a PDF and read the size.",
+      "Pick a quality preset or set your own.",
+      "Run — each page is rendered, re-encoded and embedded.",
+      "Compare the reported sizes, then download if the result is acceptable."
+    ],
+    "example": {
+      "title": "Shrinking a 14 MB scanned report for email",
+      "body": "At 0.6 quality and 1.4× scale a 14 MB scan typically lands well under 3 MB. Because the output is image-based, the report is no longer searchable — the tool tells you that before the run, not after."
+    },
+    "does": [
+      "Quality and resolution controls",
+      "Before/after byte comparison",
+      "Page-by-page re-encoding",
+      "Explicit warning when text becomes an image"
+    ],
+    "doesnt": [
+      "This build re-renders pages as images, so text stops being selectable. That trade-off is stated before you run it.",
+      "It is not a lossless optimiser: object-level stream compression is a different technique and is not implemented here."
+    ],
+    "faq": [
+      {
+        "q": "Is this lossless compression?",
+        "a": "No. It re-encodes page images at a lower quality and resolution. Lossless stream optimisation is a different technique and is not what this button does."
+      },
+      {
+        "q": "Why did my text stop being selectable?",
+        "a": "Because the output pages are images. If selectable text matters more than size, keep the original or use the text extractor alongside it."
+      },
+      {
+        "q": "Will the file always get smaller?",
+        "a": "Not always. A PDF that is already heavily optimised can grow. The tool reports the real numbers and lets you discard the result."
+      }
+    ],
+    "related": [
+      "pdf-to-images",
+      "merge-pdf",
+      "image-compressor"
+    ],
+    "training": [
+      "pdf-compression-what-actually-shrinks"
+    ]
+  },
+  {
+    "id": "image-compressor",
+    "order": 13,
+    "name": "Image Compressor",
+    "cat": "image",
+    "engine": "image",
+    "mount": "imageCompressor",
+    "purpose": "Reduce image file size by choosing a real quality and dimension trade-off.",
+    "short": "Quality and scale sliders with a live before/after comparison.",
+    "techShort": "createImageBitmap",
+    "tech": "createImageBitmap · Canvas · OffscreenCanvas",
+    "keywords": "image compressor compress jpg reduce image size webp compressor",
+    "privacyNote": "Images are decoded with createImageBitmap and re-encoded by the canvas in this tab. The image, its pixels and its filename stay local.",
+    "steps": [
+      "Drop one or more images.",
+      "Set quality and, if needed, a maximum edge length.",
+      "Compare the preview and the reported byte sizes.",
+      "Download individual files or the ZIP."
+    ],
+    "example": {
+      "title": "Getting product photos under 200 KB",
+      "body": "A 4032 × 3024 phone photo at quality 0.72 with a 1600 px max edge usually lands between 150 and 250 KB while staying sharp at web sizes. The size readout updates as you move the slider, so the target is reached by measurement, not by guessing."
+    },
+    "does": [
+      "Quality slider with live output size",
+      "Optional max-edge downscale",
+      "Side-by-side preview at 1:1",
+      "Batch mode with a ZIP download"
+    ],
+    "doesnt": [
+      "Output is always re-encoded, so a second pass loses a little more quality each time.",
+      "PNG output is quantised by the browser encoder; for photos, WebP or JPG is usually smaller."
+    ],
+    "faq": [
+      {
+        "q": "Does compressing remove metadata?",
+        "a": "Yes, re-encoding through canvas drops EXIF. Use Remove Image Metadata when you want to see exactly which fields are removed."
+      },
+      {
+        "q": "Why is my PNG larger after compression?",
+        "a": "Canvas PNG encoding is not an optimiser. For photographic PNGs, converting to WebP or JPG produces a much smaller file."
+      },
+      {
+        "q": "Is the original modified?",
+        "a": "No. You download new files; the source stays untouched."
+      }
+    ],
+    "related": [
+      "image-resizer",
+      "image-format-converter",
+      "remove-image-metadata"
+    ],
+    "training": [
+      "jpeg-quality-vs-dimensions"
+    ]
+  },
+  {
+    "id": "image-resizer",
+    "order": 14,
+    "name": "Image Resizer",
+    "cat": "image",
+    "engine": "image",
+    "mount": "imageResizer",
+    "purpose": "Resize images to exact pixel dimensions or a percentage, with aspect ratio locked.",
+    "short": "Exact dimensions, percentage scaling, and a locked ratio.",
+    "techShort": "createImageBitmap",
+    "tech": "createImageBitmap · Canvas",
+    "keywords": "image resizer resize image scale photo change image dimensions",
+    "privacyNote": "Resizing happens on a canvas in this tab. No upload, no processing queue, no filename transmitted.",
+    "steps": [
+      "Add images and read their dimensions.",
+      "Enter a target width, height or percentage.",
+      "Keep the ratio locked unless you intend to distort.",
+      "Resize and download."
+    ],
+    "example": {
+      "title": "Preparing a 1200 px social image",
+      "body": "A 6000 px photo resized to 1200 px wide with the ratio locked produces an 1200 × 800 file. Because the downscale uses high-quality smoothing, edges stay clean instead of aliasing."
+    },
+    "does": [
+      "Exact width and height, or percentage",
+      "Aspect-ratio lock",
+      "High-quality smoothing on downscale",
+      "Batch resize with consistent settings"
+    ],
+    "doesnt": [
+      "Upscaling cannot invent detail; results above 200% look soft.",
+      "Animated GIF and WebP frames are flattened to the first frame."
+    ],
+    "faq": [
+      {
+        "q": "Why does my animated GIF lose its animation?",
+        "a": "Canvas draws a single frame. Animation requires a GIF encoder that preserves frame delays, which is not part of this tool."
+      },
+      {
+        "q": "Can I resize to a print size in centimetres?",
+        "a": "No. Pixels are the only meaningful unit without a DPI assumption, so the tool stays in pixels."
+      },
+      {
+        "q": "Does resizing change the aspect ratio?",
+        "a": "Only if you unlock the ratio and type both dimensions."
+      }
+    ],
+    "related": [
+      "image-cropper",
+      "image-compressor",
+      "image-format-converter"
+    ],
+    "training": []
+  },
+  {
+    "id": "image-cropper",
+    "order": 15,
+    "name": "Image Cropper",
+    "cat": "image",
+    "engine": "image",
+    "mount": "imageCropper",
+    "purpose": "Crop an image to a free region or a fixed ratio, with pixel-accurate output.",
+    "short": "Drag a crop box, lock a ratio, export the exact region.",
+    "techShort": "Canvas",
+    "tech": "Canvas · Pointer Events",
+    "keywords": "image cropper crop photo crop image online square crop",
+    "privacyNote": "Cropping reads pixels from a canvas in the tab. The image is never uploaded.",
+    "steps": [
+      "Load an image.",
+      "Drag the crop box or type exact coordinates.",
+      "Optionally lock a ratio.",
+      "Export the cropped result."
+    ],
+    "example": {
+      "title": "Making a square avatar from a portrait",
+      "body": "Lock 1:1, drag the box over the face, and the readout shows the exact 800 × 800 output. Typing coordinates afterwards nudges the box by single pixels."
+    },
+    "does": [
+      "Free crop or locked ratios (1:1, 4:5, 16:9, 3:2, 2:3)",
+      "Numeric crop box entry for exact regions",
+      "Live output dimension readout",
+      "PNG or JPG export"
+    ],
+    "doesnt": [
+      "Rotation during crop is not supported; rotate first, then crop.",
+      "Crop coordinates are in source pixels, so huge images need a scaled preview."
+    ],
+    "faq": [
+      {
+        "q": "Can I crop to a circle?",
+        "a": "The crop box is rectangular. A circular mask would need transparency handling that depends on the output format."
+      },
+      {
+        "q": "Is the crop destructive?",
+        "a": "Only to the downloaded copy. The original file is unchanged."
+      },
+      {
+        "q": "Why are my coordinates off by a pixel?",
+        "a": "Fractional drag positions are rounded to whole pixels on export."
+      }
+    ],
+    "related": [
+      "image-resizer",
+      "image-color-picker",
+      "image-format-converter"
+    ],
+    "training": []
+  },
+  {
+    "id": "image-format-converter",
+    "order": 16,
+    "name": "Image Format Converter",
+    "cat": "image",
+    "engine": "image",
+    "mount": "imageConverter",
+    "purpose": "Convert between JPG, PNG and WebP, and to AVIF only where the browser can actually encode it.",
+    "short": "Format conversion with a real capability check.",
+    "techShort": "Canvas",
+    "tech": "Canvas · ImageDecoder capability check",
+    "keywords": "image converter png to jpg webp converter avif",
+    "privacyNote": "Encoding is performed by the browser's own codecs on a canvas in this tab. No image data is transmitted.",
+    "steps": [
+      "Add images.",
+      "Choose the target format — unsupported formats are shown as disabled with a reason.",
+      "Set quality or background colour if relevant.",
+      "Convert and download."
+    ],
+    "example": {
+      "title": "Moving screenshots from PNG to WebP",
+      "body": "Six UI screenshots converted to WebP at 0.9 quality typically drop to a third of the PNG size with no visible difference on flat colour areas."
+    },
+    "does": [
+      "JPG, PNG and WebP output",
+      "AVIF offered only when canvas encoding is supported",
+      "Background colour control for JPG output",
+      "Batch conversion with a ZIP"
+    ],
+    "doesnt": [
+      "AVIF encoding is not available in every browser; the option is disabled rather than silently falling back.",
+      "Converting JPG to PNG cannot restore detail that was lost in the original JPEG."
+    ],
+    "faq": [
+      {
+        "q": "Why is AVIF greyed out?",
+        "a": "Because this browser cannot encode AVIF from a canvas. Shipping a fake option would produce files that fail to open."
+      },
+      {
+        "q": "Does converting to JPG add a white background?",
+        "a": "Yes, unless you pick another background colour. JPG has no alpha channel."
+      },
+      {
+        "q": "Is there a quality loss?",
+        "a": "For lossy targets such as JPG and WebP, yes. PNG output is lossless but larger."
+      }
+    ],
+    "related": [
+      "image-compressor",
+      "image-resizer",
+      "favicon-generator"
+    ],
+    "training": []
+  },
+  {
+    "id": "remove-image-metadata",
+    "order": 17,
+    "name": "Remove Image Metadata / EXIF",
+    "cat": "image",
+    "engine": "image",
+    "mount": "removeExif",
+    "purpose": "Read an image's EXIF fields, including GPS, then save a copy with the metadata removed.",
+    "short": "See the hidden fields — camera, timestamps, GPS — before removing them.",
+    "techShort": "exifr",
+    "tech": "exifr · Canvas",
+    "keywords": "remove exif strip metadata gps photo remover image metadata",
+    "privacyNote": "EXIF is parsed in the tab and the cleaned copy is produced by re-encoding on a canvas. No image or metadata is transmitted.",
+    "steps": [
+      "Add an image.",
+      "Review the extracted fields — GPS is highlighted.",
+      "Choose full strip or keep orientation only.",
+      "Download the cleaned copy."
+    ],
+    "example": {
+      "title": "Posting a photo without revealing where it was taken",
+      "body": "A phone photo carries GPS latitude and longitude plus a device serial. After cleaning, the exported file contains no EXIF block at all, and the pixels are already rotated upright so the photo still displays correctly."
+    },
+    "does": [
+      "Full EXIF read: camera, lens, exposure, timestamps",
+      "GPS coordinates shown as an explicit warning",
+      "Selective cleaning or full strip",
+      "Before/after field report"
+    ],
+    "doesnt": [
+      "Cleaning re-encodes the image, so a tiny generation loss is unavoidable in lossy formats.",
+      "Orientation metadata is applied to the pixels before removal, so the image does not appear rotated."
+    ],
+    "faq": [
+      {
+        "q": "Does removing EXIF reduce quality?",
+        "a": "Slightly, because the image is re-encoded. The alternative — rewriting the container in place — requires a format-specific writer for each file type."
+      },
+      {
+        "q": "What metadata cannot be removed?",
+        "a": "Anything baked into the pixels, plus filesystem timestamps on your own disk. Colour profile data is also re-derived by the encoder."
+      },
+      {
+        "q": "Is GPS always present?",
+        "a": "Only when the camera or phone recorded it and the app did not strip it. Many social platforms already remove it on upload."
+      }
+    ],
+    "related": [
+      "pdf-metadata-cleaner",
+      "image-compressor",
+      "image-format-converter"
+    ],
+    "training": [
+      "what-exif-metadata-reveals"
+    ]
+  },
+  {
+    "id": "favicon-generator",
+    "order": 18,
+    "name": "Favicon Generator",
+    "cat": "image",
+    "engine": "image",
+    "mount": "faviconGenerator",
+    "purpose": "Generate a complete favicon set — ICO plus PNG sizes — from one square image.",
+    "short": "ICO and PNG package with the HTML snippet.",
+    "techShort": "Canvas",
+    "tech": "Canvas · ICO container writer · JSZip",
+    "keywords": "favicon generator ico generator site icon apple touch icon",
+    "privacyNote": "All resizing and ICO assembly happens in the tab. Your logo is never uploaded.",
+    "steps": [
+      "Load a square logo.",
+      "Choose a background colour for transparent areas.",
+      "Generate — each size is drawn and encoded.",
+      "Download the ZIP and paste the snippet into your head."
+    ],
+    "example": {
+      "title": "Shipping a favicon set in one pass",
+      "body": "A 1024 px logo produces favicon.ico (16/32/48), apple-touch-icon.png (180), icon-192.png, icon-512.png and a manifest, all in one ZIP. The HTML snippet includes the theme colour taken from the image."
+    },
+    "does": [
+      "16, 32, 48, 180, 192 and 512 px PNGs",
+      "Multi-resolution favicon.ico",
+      "ZIP package with a site.webmanifest",
+      "Copy-ready HTML link tags"
+    ],
+    "doesnt": [
+      "The ICO embeds PNG-compressed entries, which every current browser supports; very old Windows shell versions expect BMP entries.",
+      "Source images should be square and at least 512 px to avoid soft edges."
+    ],
+    "faq": [
+      {
+        "q": "Why does my favicon look blurry at 16 px?",
+        "a": "Because a detailed logo cannot survive 16 px. Supply a simplified mark for the small sizes."
+      },
+      {
+        "q": "Is the ICO a real icon file?",
+        "a": "Yes — the tool writes an ICONDIR header with PNG entries, which is the format modern browsers and Windows read."
+      },
+      {
+        "q": "Do I need the manifest?",
+        "a": "Only for installable web apps. The link tags alone are enough for a normal site."
+      }
+    ],
+    "related": [
+      "image-resizer",
+      "image-format-converter",
+      "image-cropper"
+    ],
+    "training": []
+  },
+  {
+    "id": "image-color-picker",
+    "order": 19,
+    "name": "Image Color Picker",
+    "cat": "color",
+    "engine": "image",
+    "mount": "colorPicker",
+    "purpose": "Read the exact colour of any pixel, with hex, RGB and HSL values.",
+    "short": "Sample precise pixel colours from an image.",
+    "techShort": "Canvas",
+    "tech": "Canvas · getImageData",
+    "keywords": "color picker eyedropper image hex color from image pick color",
+    "privacyNote": "Pixels are read from a canvas in this tab. The image is never uploaded and no colour value is logged.",
+    "steps": [
+      "Load an image.",
+      "Hover to see the loupe, click to sample.",
+      "Copy the format you need.",
+      "Keep sampling — recent swatches stay in the tray."
+    ],
+    "example": {
+      "title": "Matching a brand colour from a screenshot",
+      "body": "Sample the logo fill, copy the hex value, and paste it straight into CSS. The HSL readout is handy when you need a darker hover state without shifting hue."
+    },
+    "does": [
+      "Click or keyboard-sample any pixel",
+      "Hex, RGB, HSL and CSS variable output",
+      "Magnified loupe for precise sampling",
+      "Recent swatches with copy buttons"
+    ],
+    "doesnt": [
+      "Values are read after the browser's colour management, so they reflect what is displayed, not the raw file values.",
+      "Images with an embedded ICC profile are converted to sRGB before sampling."
+    ],
+    "faq": [
+      {
+        "q": "Why is the sampled colour slightly different from my design file?",
+        "a": "Because the browser converts the image to sRGB for display. If the file carries a wide-gamut profile, the displayed value is the converted one."
+      },
+      {
+        "q": "Can I sample outside the canvas?",
+        "a": "No. Screen-wide eyedroppers are a browser or OS feature; this tool reads only the image you loaded."
+      },
+      {
+        "q": "Is the value logged anywhere?",
+        "a": "No. Colour values are treated as payload and never leave the page."
+      }
+    ],
+    "related": [
+      "image-palette-extractor",
+      "favicon-generator",
+      "image-cropper"
+    ],
+    "training": []
+  },
+  {
+    "id": "image-palette-extractor",
+    "order": 20,
+    "name": "Image Palette Extractor",
+    "cat": "color",
+    "engine": "image",
+    "mount": "paletteExtractor",
+    "purpose": "Extract a usable palette from an image by clustering its actual pixel colours.",
+    "short": "Dominant colours with real population counts.",
+    "techShort": "Canvas",
+    "tech": "Canvas · median-cut quantisation",
+    "keywords": "color palette from image extract colors dominant colors palette generator",
+    "privacyNote": "Pixels are sampled and clustered in this tab. The image and the resulting palette stay local.",
+    "steps": [
+      "Load an image.",
+      "Choose the palette size.",
+      "Review the swatches and their share of pixels.",
+      "Copy the format you need."
+    ],
+    "example": {
+      "title": "Deriving a UI palette from a photograph",
+      "body": "An eight-colour palette from a landscape photo gives two dominant neutrals, one accent and several shadow tones, each with its percentage of the sampled pixels so you can see which colour actually carries the image."
+    },
+    "does": [
+      "4 to 12 colour palettes",
+      "Population share per colour",
+      "Copy as hex list, CSS variables or JSON",
+      "Ignores fully transparent pixels"
+    ],
+    "doesnt": [
+      "Median-cut quantisation is perceptual, not semantic — it will not tell you which colour is the “brand” colour.",
+      "Very large images are sampled on a grid to keep the main thread responsive."
+    ],
+    "faq": [
+      {
+        "q": "How are colours chosen?",
+        "a": "Pixels are quantised with a median-cut algorithm, then each bucket's average colour is reported with its share of the sample."
+      },
+      {
+        "q": "Why does the palette change when I resize the image?",
+        "a": "Because the sample grid changes. Both results are valid summaries of different pixel sets."
+      },
+      {
+        "q": "Can I exclude the background?",
+        "a": "Not directly. Cropping the subject first gives a cleaner palette."
+      }
+    ],
+    "related": [
+      "image-color-picker",
+      "favicon-generator",
+      "image-cropper"
+    ],
+    "training": []
+  }
+]

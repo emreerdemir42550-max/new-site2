@@ -1,0 +1,50 @@
+{
+  "slug": "pdf-compression-what-actually-shrinks",
+  "title": "What PDF compression actually shrinks — and what it costs",
+  "description": "Stream filters, image re-encoding and page rasterisation are three different things that all get called 'compress'. Only one of them is lossless, and most online tools quietly use the third.",
+  "date": "2026-09-10",
+  "readMinutes": 4,
+  "author": "Editorial Team",
+  "type": "concept",
+  "tool": "compress-pdf",
+  "relTools": [
+    "pdf-to-images",
+    "merge-pdf",
+    "image-compressor"
+  ],
+  "relPosts": [
+    "jpeg-quality-vs-dimensions",
+    "text-pdfs-vs-scanned-pdfs"
+  ],
+  "legacyFigures": [
+    {
+      "src": "https://images.unsplash.com/photo-1468779036391-52341f60b55d?w=1400&q=74&auto=format&fit=crop",
+      "alt": "A stack of thick document folders on a white surface"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=1400&q=74&auto=format&fit=crop",
+      "alt": "A white and grey all-in-one printer"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/PDF32000_2008.pdf",
+      "title": "PDF 32000-1:2008 — §7.4 Filters and §7.8 Content streams",
+      "publisher": "Adobe / ISO 32000-1",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://web.dev/articles/compress-images",
+      "title": "Compress images",
+      "publisher": "web.dev",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://pdf-lib.js.org/docs/api/classes/pdfdocument",
+      "title": "pdf-lib — embedding images",
+      "publisher": "pdf-lib",
+      "retrieved": "10 September 2026"
+    }
+  ],
+  "body": "<p><strong>Short answer:</strong> a PDF gets smaller in one of three ways — better stream compression (lossless), re-encoding embedded images (lossy, text survives), or rasterising whole pages into images (lossy, text stops being text). Most “compress PDF” buttons do the third without saying so.</p><h2 id=\"where-the-bytes-actually-are\">Where the bytes actually are</h2><p>A PDF is a set of objects. The bulk of a typical file is in:</p><ul><li><strong>Image XObjects.</strong> Each embedded image is a stream, usually already JPEG or JPEG2000-compressed.</li><li><strong>Content streams.</strong> The drawing instructions for each page. These compress well with Flate (zlib).</li><li><strong>Fonts.</strong> Subset font programs, sometimes several hundred kilobytes each.</li><li><strong>Object overhead.</strong> Cross-reference tables, page tree nodes, metadata.</li></ul><p>The composition tells you what a given technique can achieve. A 40 MB scan is almost entirely image data; compressing its content streams saves almost nothing. A 40 MB CAD export may be mostly vector instructions that Flate can shrink substantially.</p><h2 id=\"technique-1--lossless-stream-optimisation\">Technique 1 — lossless stream optimisation</h2><p>Every stream in a PDF can carry a filter: <code>/FlateDecode</code> for zlib, <code>/DCTDecode</code> for JPEG data, <code>/CCITTFaxDecode</code> for fax-style bitonal images, and so on. Lossless optimisation:</p><ul><li>re-compresses uncompressed streams with Flate;</li><li>uses object streams and cross-reference streams (PDF 1.5+) to remove per-object overhead;</li><li>removes unused objects and duplicate resources;</li><li>drops unreferenced metadata.</li></ul><p>Nothing visual changes. Text stays text, images stay bit-identical. Savings depend entirely on how inefficiently the producer wrote the file — a badly generated PDF can halve; an already-optimised one barely moves.</p><h2 id=\"technique-2--re-encoding-embedded-images\">Technique 2 — re-encoding embedded images</h2><p>Here the images inside the document are decoded, downsampled, re-compressed at a chosen quality, and written back. Text and vector graphics are untouched, so the page still selects and searches normally.</p><p>This is the sweet spot for scans: a 600 dpi bitonal page re-encoded at 200 dpi JPEG is dramatically smaller and still readable on screen. The risk is over-doing it — thin strokes in small type are exactly what JPEG quantisation destroys first.</p><p>A proper implementation lets you choose the resolution and quality, and tells you what it did per image. A tool that only offers a single “compress” button is hiding a decision you should be making.</p><h2 id=\"technique-3--page-rasterisation\">Technique 3 — page rasterisation</h2><p>The nuclear option: render each page to a bitmap at some scale, then build a brand-new PDF whose pages each contain one image.</p><p>What it buys: predictable, often large size reductions, and it flattens anything complicated (forms, transparency, layers, embedded fonts).</p><p>What it costs:</p><ul><li><strong>Text is no longer text.</strong> Selection, search, copy, screen-reader access and text extraction all stop working.</li><li><strong>Vector sharpness is gone.</strong> Lines that were mathematically crisp become pixels, which is visible when zoomed or printed.</li><li><strong>Links and annotations disappear</strong> unless the rebuild explicitly recreates them.</li><li><strong>Fonts are gone</strong>, so the file no longer carries its typography.</li></ul><p><a href=\"/tools/compress-pdf/\">Compress PDF</a> on this site uses this technique — and says so on the tool page, in the control label (“Compress (re-render pages)”), and in the result panel. That is the minimum honesty bar: if the output is images, the button should not pretend otherwise.</p><h2 id=\"choosing-between-them\">Choosing between them</h2><table><thead><tr><th>You need</th><th>Use</th></tr></thead><tbody><tr><td>Smaller file, nothing else changes</td><td>Lossless optimisation (not offered here; use a desktop tool such as qpdf or Ghostscript)</td></tr><tr><td>Smaller scan, text still selectable</td><td>Image re-encoding with resolution control</td></tr><tr><td>A file that will only ever be viewed or printed</td><td>Rasterisation is acceptable</td></tr><tr><td>Text must remain searchable</td><td>Never rasterise</td></tr></tbody></table><h2 id=\"why-it-got-bigger-happens\">Why “it got bigger” happens</h2><p>Compression is not monotonic. Re-encoding an already-optimised JPEG at high quality can produce a larger stream. Rasterising a text-heavy page at 2× scale can produce a much larger file than the original. A tool that reports the real before/after numbers lets you discard a bad result; a tool that shows a green “Done!” does not.</p><p>The result panel in this site’s compressor prints the before size, the after size and the percentage change — including a negative percentage, in red, when the file grew.</p><h2 id=\"practical-advice\">Practical advice</h2><ul><li><strong>Keep the original.</strong> Compression is a derivative operation. Never overwrite your only copy.</li><li><strong>Check the output, not the number.</strong> Open the compressed file and zoom in on the smallest text.</li><li><strong>Do not chain compressors.</strong> Each lossy pass compounds.</li><li><strong>Split before compressing</strong> if only a few pages are heavy — <a href=\"/tools/split-pdf/\">Split PDF</a> plus targeted compression beats compressing everything.</li></ul><h2 id=\"faq\">FAQ</h2><p><strong>Is PDF compression always lossy?</strong> No. Stream optimisation is lossless. Image re-encoding and rasterisation are not.</p><p><strong>Why did my text disappear?</strong> Because the tool rasterised the pages. The characters are now pixels.</p><p><strong>Can I compress and keep the text layer?</strong> Yes, if the tool re-encodes images rather than pages. That requires a real PDF writer, not a renderer.</p><p><strong>Does compression remove metadata?</strong> Usually not, unless the tool rebuilds the document. Use <a href=\"/tools/pdf-metadata-cleaner/\">PDF Metadata Viewer & Cleaner</a> for that separately.</p>"
+}

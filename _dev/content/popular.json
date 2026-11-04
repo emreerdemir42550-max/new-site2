@@ -1,0 +1,34 @@
+[
+  {
+    "id": "merge-pdf",
+    "note": "The one task almost everyone needs first: several files, one packet, no upload."
+  },
+  {
+    "id": "image-compressor",
+    "note": "Quality and dimensions are the only two levers that matter, so both are exposed."
+  },
+  {
+    "id": "compress-pdf",
+    "note": "Honest about the trade-off: re-encoded pages are smaller and no longer searchable."
+  },
+  {
+    "id": "split-pdf",
+    "note": "Ranges beat bookmark guesswork because a range can be verified before you run it."
+  },
+  {
+    "id": "pdf-to-images",
+    "note": "Useful whenever a PDF page has to become a screenshot."
+  },
+  {
+    "id": "images-to-pdf",
+    "note": "The reverse direction, with real page geometry."
+  },
+  {
+    "id": "image-resizer",
+    "note": "Exact pixels, locked ratio, no surprises."
+  },
+  {
+    "id": "image-format-converter",
+    "note": "WebP is usually the win here; AVIF only appears if the browser can encode it."
+  }
+]

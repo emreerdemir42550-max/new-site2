@@ -1,0 +1,23 @@
+[
+  {
+    "id": "pdf",
+    "name": "PDF Documents",
+    "short": "PDF",
+    "lede": "PDF work is mostly page-tree surgery: which pages exist, in what order, and how each page is drawn. These tools read the file into memory, rewrite the object graph, and hand the result back as a download.",
+    "description": "Assemble, split, rotate, watermark and inspect PDFs. The page tree is rewritten with PDF-lib inside the tab, so nothing is uploaded and no queue exists."
+  },
+  {
+    "id": "image",
+    "name": "Images & Metadata",
+    "short": "Images",
+    "lede": "Raster work in the browser is Canvas work: decode to a bitmap, draw into a target surface, re-encode. That makes quality and dimension trade-offs explicit instead of hiding them behind a black box.",
+    "description": "Resize, crop, convert, compress and strip metadata from JPG, PNG and WebP using Canvas and an in-tab EXIF parser."
+  },
+  {
+    "id": "color",
+    "name": "Color & Palettes",
+    "short": "Color",
+    "lede": "Color tools are measurement tools. They report what the pixels actually contain — in sRGB, hex and HSL — rather than guessing a mood.",
+    "description": "Read exact pixel values, extract a usable palette and export swatches for design handoff."
+  }
+]

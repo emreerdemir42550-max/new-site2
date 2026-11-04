@@ -1,0 +1,1 @@
+const e=document.getElementById("hdr-menu-btn"),t=document.getElementById("hdr-menu");e?.addEventListener("click",()=>{const d=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",String(!d)),t&&(t.hidden=d)});document.addEventListener("keydown",d=>{d.key==="Escape"&&t&&!t.hidden&&(t.hidden=!0,e?.setAttribute("aria-expanded","false"),e?.focus())});

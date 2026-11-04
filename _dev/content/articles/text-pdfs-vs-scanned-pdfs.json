@@ -1,0 +1,50 @@
+{
+  "slug": "text-pdfs-vs-scanned-pdfs",
+  "title": "Text PDFs vs scanned PDFs: why one gives you words and the other gives you nothing",
+  "description": "A PDF can contain real characters or a photograph of characters. Here is how to tell the difference in seconds, and why extraction is not OCR.",
+  "date": "2026-09-10",
+  "readMinutes": 4,
+  "author": "Editorial Team",
+  "type": "concept",
+  "tool": "pdf-text-extractor",
+  "relTools": [
+    "pdf-to-images",
+    "pdf-metadata-cleaner",
+    "compress-pdf"
+  ],
+  "relPosts": [
+    "how-to-merge-pdfs-in-your-browser",
+    "pdf-compression-what-actually-shrinks"
+  ],
+  "legacyFigures": [
+    {
+      "src": "https://images.unsplash.com/photo-1771758249853-415175dc29b9?w=1400&q=74&auto=format&fit=crop",
+      "alt": "A close-up of a stack of printed papers"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1761322572550-967ea8c0bfd9?w=1400&q=74&auto=format&fit=crop",
+      "alt": "An open notebook with pen and pencils on a desk"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/PDF32000_2008.pdf",
+      "title": "PDF 32000-1:2008 — §9.4 Text showing operators",
+      "publisher": "Adobe / ISO 32000-1",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://mozilla.github.io/pdf.js/",
+      "title": "PDF.js — documentation and source",
+      "publisher": "Mozilla",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://tesseract-ocr.github.io/",
+      "title": "Tesseract OCR — documentation",
+      "publisher": "Tesseract project",
+      "retrieved": "10 September 2026"
+    }
+  ],
+  "body": "<p><strong>Short answer:</strong> if you can select the text in a PDF viewer, the file contains a text layer and extraction will work. If dragging across a line selects nothing, the page is an image and you need OCR — a completely different operation that this site does not pretend to do.</p><h2 id=\"two-very-different-ways-to-make-a-pdf\">Two very different ways to make a PDF</h2><p><strong>A born-digital PDF</strong> is produced by software that knows what a character is. Word processors, LaTeX, browsers and report generators write text-showing operators into the page content stream: a font is selected, a position is set, and a string of character codes is drawn. The viewer maps those codes through the font’s encoding to Unicode, which is how selection, search and copy work.</p><p><strong>A scanned PDF</strong> is produced by a scanner or a phone camera. The page contains one large image — often JPEG or CCITT-encoded — and nothing else. There are no character codes, because nobody told the file that those marks are letters. A viewer can display it perfectly and still have no idea what it says.</p><p>The difference is not about quality. A 600 dpi scan is a high-quality image of text and still has zero extractable characters. A 1998 PDF produced by a fax-adjacent tool can contain ugly bitmapped fonts and still expose every word, because the character codes are there even if the glyphs are crude.</p><h2 id=\"how-to-tell-in-five-seconds\">How to tell in five seconds</h2><ol><li>Open the file in a browser or reader.</li><li>Try to select a sentence with the mouse.</li><li>If selection highlights individual characters, there is a text layer.</li><li>If the whole page highlights as a block — or nothing highlights — it is an image.</li></ol><p>A second test: use the viewer’s find function and search for a word you can clearly see. If the search fails, there is no text layer.</p><p><a href=\"/tools/pdf-text-extractor/\">PDF Text Extractor</a> does the same test page by page and reports exactly which pages came back empty. That report is more useful than a single “extraction failed” message, because mixed documents are common: a contract can be born-digital for the first twelve pages and a scanned annex for the rest.</p><h2 id=\"what-extraction-actually-reads\">What extraction actually reads</h2><p>For each page, PDF.js parses the content stream, tracks the text matrix as it moves, and returns items with a string, a transform and a width. Concatenating those items gives you the page’s text — approximately.</p><p>Approximation is the honest word here, for three reasons:</p><ul><li><strong>Reading order is drawing order.</strong> PDF has no notion of columns. A two-column paper is stored in whatever order the producer wrote the runs, so a naive concatenation can interleave the columns.</li><li><strong>Spaces are often positional, not literal.</strong> Many producers do not emit space characters; they move the text cursor instead. Extractors infer spaces from gaps, which mostly works and occasionally does not.</li><li><strong>Ligatures and unusual encodings.</strong> A font may encode “fi” as a single glyph. PDF.js maps common ligatures to their component characters, but unusual embedded subsets can produce replacement characters.</li></ul><p>None of these are bugs in the tool; they are properties of the format.</p><h2 id=\"why-ocr-is-a-different-job\">Why OCR is a different job</h2><p>OCR takes the page image and asks a model to propose characters for the shapes it sees. That means:</p><ul><li><strong>It can be wrong in ways extraction cannot.</strong> Extraction returns what the file says, even if the file says something odd. OCR returns a guess, and the guess can be confidently wrong on a serial number.</li><li><strong>It needs a model.</strong> Tesseract and similar engines ship language data and are measured in tens of megabytes. That is a different weight class from a parser.</li><li><strong>It is slow.</strong> Seconds per page rather than milliseconds.</li><li><strong>It produces a new file.</strong> A useful OCR workflow writes an invisible text layer over the original image so the page becomes searchable while looking unchanged.</li></ul><p>If you need OCR, use a tool that says it does OCR and shows you the recognised text for correction. A “PDF to Word” button that silently runs extraction and calls the result a conversion is the thing to avoid.</p><h2 id=\"practical-consequences\">Practical consequences</h2><ul><li><strong>Searchable archives:</strong> if search matters, check whether the scan pipeline writes a text layer. Many scanners can do this at capture time.</li><li><strong>Compression:</strong> re-rendering pages as images — which is what <a href=\"/tools/compress-pdf/\">Compress PDF</a> does — <em>removes</em> a text layer if one existed. That trade-off is stated on the tool page for exactly this reason.</li><li><strong>File size:</strong> a scanned page is usually much larger than a text page. If a 30-page document is 40 MB, it is almost certainly a scan.</li><li><strong>Metadata:</strong> scanned files often carry scanner model names and timestamps in their document information dictionary. <a href=\"/tools/pdf-metadata-cleaner/\">PDF Metadata Viewer & Cleaner</a> shows them before you remove them.</li></ul><h2 id=\"faq\">FAQ</h2><p><strong>Can a PDF have both?</strong> Yes. Many OCR pipelines add a text layer to an image page. Those files select text and still look like scans.</p><p><strong>Why does my extracted text have odd line breaks?</strong> Because each text run is positioned separately. Joining runs with spaces reproduces the visual layout only approximately.</p><p><strong>Does extraction work on password-protected files?</strong> Only after the document is unlocked; the text layer is inside the encrypted object graph.</p>"
+}

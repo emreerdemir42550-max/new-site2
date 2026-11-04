@@ -1,0 +1,50 @@
+{
+  "slug": "what-exif-metadata-reveals",
+  "title": "What EXIF metadata reveals about you — and what removing it does not fix",
+  "description": "A photo can carry the camera, the timestamp, the serial number and the exact coordinates. What each field means, how to read it, and the limits of stripping it.",
+  "date": "2026-09-10",
+  "readMinutes": 4,
+  "author": "Editorial Team",
+  "type": "privacy",
+  "tool": "remove-image-metadata",
+  "relTools": [
+    "image-compressor",
+    "image-format-converter",
+    "pdf-metadata-cleaner"
+  ],
+  "relPosts": [
+    "jpeg-quality-vs-dimensions",
+    "text-pdfs-vs-scanned-pdfs"
+  ],
+  "legacyFigures": [
+    {
+      "src": "https://images.unsplash.com/photo-1767216418975-9853643c4f10?w=1400&q=74&auto=format&fit=crop",
+      "alt": "A desk with stationery, keyboard and glasses"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1691415780572-de7c176a3b18?w=1400&q=74&auto=format&fit=crop",
+      "alt": "A sheet of white paper with a deep fold"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://www.cipa.jp/std/documents/e/DC-008-Translation-2019-E.pdf",
+      "title": "CIPA DC-008 — Exchangeable image file format for digital still cameras: Exif 2.32",
+      "publisher": "CIPA",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://exiftool.org/TagNames/EXIF.html",
+      "title": "ExifTool — EXIF tag names",
+      "publisher": "Phil Harvey",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap",
+      "title": "createImageBitmap() — imageOrientation option",
+      "publisher": "MDN Web Docs",
+      "retrieved": "10 September 2026"
+    }
+  ],
+  "body": "<p><strong>Short answer:</strong> EXIF is a metadata block that cameras and phones write into image files. It commonly includes the device model, the capture time, exposure settings and — if location services were on — GPS coordinates with enough precision to identify a building. Removing it means re-encoding the image without that block, which also changes the pixels slightly.</p><h2 id=\"what-is-actually-in-there\">What is actually in there</h2><p>The Exif specification defines a set of tags grouped into IFDs (image file directories). The ones that matter for privacy are a small subset:</p><table><thead><tr><th>Tag</th><th>What it holds</th><th>Why it matters</th></tr></thead><tbody><tr><td><code>Make</code>, <code>Model</code></td><td>Camera or phone model</td><td>Links photos from the same device</td></tr><tr><td><code>DateTimeOriginal</code></td><td>Capture timestamp to the second</td><td>Places a person at a time</td></tr><tr><td><code>GPSLatitude</code>, <code>GPSLongitude</code></td><td>Coordinates in degrees/minutes/seconds</td><td>Often accurate to a few metres</td></tr><tr><td><code>GPSAltitude</code>, <code>GPSTimeStamp</code></td><td>Height and UTC time of the fix</td><td>Confirms the reading is real</td></tr><tr><td><code>SerialNumber</code>, <code>BodySerialNumber</code></td><td>Device serial</td><td>Ties files to one physical unit</td></tr><tr><td><code>Software</code></td><td>Editing app and version</td><td>Reveals the processing chain</td></tr><tr><td><code>Artist</code>, <code>Copyright</code></td><td>Author strings</td><td>Sometimes a full name or email</td></tr><tr><td><code>Orientation</code></td><td>How to rotate for display</td><td>Not private, but affects output</td></tr></tbody></table><p>Phones are the usual culprit. A camera with no GPS writes none, while a phone with location permission writes a full fix — and many messaging apps strip it on send, which is why people are often surprised when a file they saved locally still has coordinates.</p><h2 id=\"reading-it-before-you-decide\">Reading it before you decide</h2><p>The useful habit is to look first and delete second. <a href=\"/tools/remove-image-metadata/\">Remove Image Metadata</a> parses the file in the tab, lists the recognised fields, and gives GPS its own warning line rather than folding it into a generic “metadata” count. If there is no GPS, you can see that too — the absence is information.</p><p>Two details about reading EXIF correctly:</p><ul><li><strong>Timestamps are usually local time with no timezone.</strong> The spec has an offset tag, but many devices omit it. Do not assume a UTC value.</li><li><strong>GPS is stored as rational numbers</strong>, not decimal degrees. A parser converts them; a naive one gets the sign or the minute division wrong, which can put a location in the wrong hemisphere.</li></ul><h2 id=\"why-removing-it-changes-the-pixels\">Why removing it changes the pixels</h2><p>There are two ways to strip metadata:</p><ol><li><strong>Container rewrite.</strong> Remove the APP1/EXIF segment from the JPEG and keep the compressed image data untouched. Lossless, fast, and requires a format-specific writer for each file type.</li><li><strong>Re-encode.</strong> Decode the image to pixels, draw it to a canvas, and encode a new file. The new file has no EXIF because the encoder does not write one — but the pixels have been through a decode/encode cycle.</li></ol><p>Browser tools use the second approach, because Canvas is the only general-purpose encoder available. The practical consequences:</p><ul><li><strong>Quality drops slightly</strong> in lossy formats. One extra generation, not a catastrophic one, but real.</li><li><strong>Orientation is baked in.</strong> A photo taken sideways stores <code>Orientation: 6</code> and expects the viewer to rotate it. <code>createImageBitmap</code> applies that orientation by default, so the re-encoded image is upright with no orientation tag. This is usually what you want; it is worth knowing that it happened.</li><li><strong>Colour profile is re-derived.</strong> A wide-gamut source becomes sRGB.</li></ul><p>If a tool claims lossless EXIF removal in a browser without a format-specific writer, be sceptical.</p><h2 id=\"what-removal-does-not-fix\">What removal does not fix</h2><ul><li><strong>Pixels.</strong> A reflection in a window, a street sign, a name badge — those stay. Metadata removal is not redaction.</li><li><strong>File names.</strong><code>IMG_20260910_143012.jpg</code> is itself a timestamp. Rename as well.</li><li><strong>Filesystem timestamps.</strong> Creation and modification times on your own disk are outside the file.</li><li><strong>Thumbnails inside other containers.</strong> Some formats embed a preview image with its own metadata; a full re-encode drops it, but a partial tool may not.</li><li><strong>Already-published copies.</strong> If the file was uploaded somewhere, removing metadata locally does not touch the copy that is already there.</li></ul><h2 id=\"a-workable-routine\">A workable routine</h2><ol><li>Read the metadata and check for GPS.</li><li>If the photo is going somewhere public, strip it — and rename the file.</li><li>If the image will be edited further, strip metadata at the end of the edit, not before.</li><li>Keep an unmodified original if the photo has archival value.</li></ol><h2 id=\"faq\">FAQ</h2><p><strong>Does every photo have EXIF?</strong> No. Screenshots, exports from design tools and images that have already been re-encoded often have none.</p><p><strong>Is EXIF the same as IPTC or XMP?</strong> No. They are separate metadata families that can coexist in one file. A cleaner aimed at EXIF may leave XMP untouched.</p><p><strong>Can I remove only GPS?</strong> Not with a canvas re-encode — the whole block goes. Field-selective removal needs a format-aware writer.</p><p><strong>Does social media strip it?</strong> Most large platforms do on upload, but you should not rely on that for a file you are sending directly.</p>"
+}

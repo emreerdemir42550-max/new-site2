@@ -1,0 +1,50 @@
+{
+  "slug": "jpeg-quality-vs-dimensions",
+  "title": "JPEG quality vs dimensions: which one actually makes a file smaller",
+  "description": "Quality and pixel dimensions are two different levers, and one of them is much stronger. What the quality number really controls, and why resizing usually beats re-compressing.",
+  "date": "2026-09-10",
+  "readMinutes": 4,
+  "author": "Editorial Team",
+  "type": "concept",
+  "tool": "image-compressor",
+  "relTools": [
+    "image-resizer",
+    "image-format-converter",
+    "remove-image-metadata"
+  ],
+  "relPosts": [
+    "pdf-compression-what-actually-shrinks",
+    "text-pdfs-vs-scanned-pdfs"
+  ],
+  "legacyFigures": [
+    {
+      "src": "https://images.unsplash.com/photo-1777019016673-35483a7a11da?w=1400&q=74&auto=format&fit=crop",
+      "alt": "A person examining film negatives on a light table"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1777019075773-a231fa4e4534?w=1400&q=74&auto=format&fit=crop",
+      "alt": "A desk with monitors and photography equipment"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://www.w3.org/Graphics/JPEG/itu-t81.pdf",
+      "title": "ITU-T Recommendation T.81 — Digital compression and coding of continuous-tone still images",
+      "publisher": "ITU / W3C mirror",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob",
+      "title": "HTMLCanvasElement: toBlob() method",
+      "publisher": "MDN Web Docs",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://web.dev/articles/compress-images",
+      "title": "Compress images",
+      "publisher": "web.dev",
+      "retrieved": "10 September 2026"
+    }
+  ],
+  "body": "<p><strong>Short answer:</strong> both levers work, but they act on different things. Quality controls how much detail the encoder is allowed to throw away; dimensions control how many pixels exist at all. Reducing dimensions removes pixels permanently and therefore almost always shrinks a file more per unit of visible damage than lowering quality does.</p><h2 id=\"what-the-quality-number-controls\">What the quality number controls</h2><p>JPEG is a lossy transform coding scheme: the image is converted to a luminance/chrominance colour space, split into 8×8 blocks, transformed with a discrete cosine transform, and then <strong>quantised</strong>. Quantisation divides each frequency coefficient by a value from a table and rounds the result. Small coefficients become zero and disappear.</p><p>The “quality” setting in an encoder is not a standardised unit. It is a scaling factor applied to those quantisation tables. Quality 80 in one encoder is not byte-identical to quality 80 in another, and the spec does not define the mapping — which is why a file can come out larger from a different tool at the same nominal setting.</p><p>Two consequences follow:</p><ul><li><strong>Low quality hurts fine detail and edges first.</strong> High-frequency coefficients are the ones most aggressively quantised, so text, thin lines and foliage degrade before smooth skies do.</li><li><strong>Re-encoding always loses a little more.</strong> Decoding a JPEG and re-encoding it re-quantises already-quantised data. This generation loss is why a “compress” tool should not be used repeatedly on the same file.</li></ul><h2 id=\"why-dimensions-usually-win\">Why dimensions usually win</h2><p>A JPEG’s size scales roughly with the number of 8×8 blocks it contains, which scales with pixel count. Halving both dimensions reduces the pixel count to a quarter. The encoder then has a quarter as many blocks to describe, so the file shrinks substantially even at a fairly high quality setting.</p><p>That is the practical argument for resizing first: a 4032 × 3024 phone photo displayed at 1600 px wide carries roughly six times more pixels than the display can use. Removing them costs nothing visible on the web and saves far more than dropping quality from 0.85 to 0.6 on the full-size image.</p><p>The trade-off is that resizing is irreversible. If the image might later be printed or cropped, keep the original and treat the resized copy as a derivative.</p><h2 id=\"a-sensible-order-of-operations\">A sensible order of operations</h2><ol><li><strong>Decide the final display size.</strong> For a web hero, that is usually the CSS width at 2× for high-density screens — often 1200–1600 px, rarely 4000.</li><li><strong>Resize to that size once</strong>, with high-quality smoothing, rather than letting the browser downscale a huge image.</li><li><strong>Then pick quality.</strong> Around 0.75–0.85 is the usual range where size drops noticeably and artefacts stay hard to see at 100% zoom.</li><li><strong>Check the result at 100%</strong>, not zoomed out. Zoomed-out previews hide exactly the artefacts you are trying to judge.</li><li><strong>Compare formats.</strong> For photographic content, WebP typically produces a smaller file than JPEG at similar visual quality; for flat UI screenshots, PNG or lossless WebP is often better than JPEG at any quality.</li></ol><p><a href=\"/tools/image-compressor/\">Image Compressor</a> exposes both levers side by side and reports the actual encoded size after each change, so the decision is made by measurement rather than by a preset name. <a href=\"/tools/image-resizer/\">Image Resizer</a> handles the dimension step when that is all you need.</p><h2 id=\"what-the-canvas-encoder-does-exactly\">What the canvas encoder does, exactly</h2><p>In a browser, <code>canvas.toBlob(callback, \"image/jpeg\", quality)</code> hands the bitmap to the browser’s own JPEG encoder. The third argument is a number between 0 and 1, and — as above — it is a hint, not a specification. Two browsers can produce different bytes for the same input and the same number.</p><p>Two more details matter in practice:</p><ul><li><strong>Canvas output is always 8-bit sRGB.</strong> A wide-gamut source is converted, and an embedded ICC profile is not carried into the output.</li><li><strong>Alpha is discarded.</strong> JPEG has no alpha channel, so transparent areas are composited onto whatever the canvas contained — which is why a background colour control exists in conversion tools.</li></ul><h2 id=\"when-compression-is-the-wrong-move\">When compression is the wrong move</h2><ul><li><strong>Text screenshots.</strong> JPEG artefacts around glyph edges are much more visible than the size saving is worth. PNG or lossless WebP wins.</li><li><strong>Images that will be edited again.</strong> Every lossy pass compounds. Compress at the end of the workflow, not the beginning.</li><li><strong>Files where metadata is the payload.</strong> Re-encoding through a canvas drops EXIF entirely. That is usually desirable — see <a href=\"/training/what-exif-metadata-reveals/\">what EXIF metadata reveals</a> — but it is a change you should make deliberately.</li></ul><h2 id=\"faq\">FAQ</h2><p><strong>Does quality 100 mean lossless?</strong> No. JPEG is lossy at every setting; 100 reduces but does not eliminate quantisation.</p><p><strong>Why did my PNG get bigger?</strong> Canvas PNG encoding is not an optimiser. For photographic PNGs, converting to WebP or JPEG usually produces a much smaller file.</p><p><strong>Is it safe to compress the same file twice?</strong> It works, but quality degrades cumulatively. Always compress from the original.</p>"
+}

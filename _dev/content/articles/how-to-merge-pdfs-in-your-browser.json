@@ -1,0 +1,50 @@
+{
+  "slug": "how-to-merge-pdfs-in-your-browser",
+  "title": "How to merge PDFs without uploading them",
+  "description": "What a PDF merge actually does to the page tree, why page order is the only decision that matters, and why encrypted files refuse to merge locally.",
+  "date": "2026-09-10",
+  "readMinutes": 4,
+  "author": "Editorial Team",
+  "type": "how-to",
+  "tool": "merge-pdf",
+  "relTools": [
+    "split-pdf",
+    "reorder-pdf-pages",
+    "extract-pdf-pages"
+  ],
+  "relPosts": [
+    "merge-vs-portfolio-vs-attachment",
+    "pdf-compression-what-actually-shrinks"
+  ],
+  "legacyFigures": [
+    {
+      "src": "https://images.unsplash.com/photo-1771173479042-810085465e49?w=1400&q=74&auto=format&fit=crop",
+      "alt": "A stack of papers marked with colourful sticky index tabs"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1544396821-4dd40b938ad3?w=1400&q=74&auto=format&fit=crop",
+      "alt": "Rows of ring binders organised on office shelves"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/PDF32000_2008.pdf",
+      "title": "PDF 32000-1:2008 — Document management, §7.7 Document structure",
+      "publisher": "Adobe / ISO 32000-1",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://pdf-lib.js.org/docs/api/classes/pdfdocument",
+      "title": "pdf-lib documentation — copyPages",
+      "publisher": "pdf-lib",
+      "retrieved": "10 September 2026"
+    },
+    {
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_API",
+      "title": "File API",
+      "publisher": "MDN Web Docs",
+      "retrieved": "10 September 2026"
+    }
+  ],
+  "body": "<p><strong>Short answer:</strong> a merge copies the page objects of several documents into one new document, in the order you choose. Nothing is re-rendered, so text stays selectable and images keep their original encoding. You can do it in a browser tab with <a href=\"/tools/merge-pdf/\">Merge PDF</a>, and the file never has to leave your device.</p><h2 id=\"what-a-merge-actually-changes\">What a merge actually changes</h2><p>A PDF is not a flat sequence of pages. It is a tree of objects: a catalogue points at a page tree, the page tree lists page objects, and each page object references its content stream, its fonts and its images. Merging means creating a new document and appending references to page objects that already exist in the source files.</p><p>That detail explains most of the behaviour people notice:</p><ul><li><strong>Quality does not change.</strong> Pages are copied as objects, not rasterised, so a merged PDF looks exactly like its sources.</li><li><strong>Page sizes can differ inside one file.</strong> A4 pages and Letter pages can coexist, because each page object carries its own MediaBox.</li><li><strong>File size grows roughly by the sum of the inputs.</strong> Shared fonts are not deduplicated across documents in a naive merge.</li></ul><h2 id=\"page-order-is-the-only-real-decision\">Page order is the only real decision</h2><p>Because the output is an ordered list of page objects, the order of the input files is the order of the pages. That sounds trivial, but it is the part people get wrong: they merge first and then try to fix the order afterwards, which means a second operation and a second chance to introduce a mistake.</p><p>A better workflow is to decide the packet order before pressing merge:</p><ol><li>Cover or routing sheet.</li><li>The primary document, in its own order.</li><li>Appendices and attachments.</li><li>Anything that needs to be found last — signature pages, schedules, forms.</li></ol><p>In <a href=\"/tools/merge-pdf/\">Merge PDF</a> the file list is the page order. Each row shows the page count it contributes, so a 3-page file that should be 30 pages is visible before you commit.</p><h2 id=\"doing-it-locally-step-by-step\">Doing it locally, step by step</h2><ol><li>Open the tool. The page loads a small JavaScript module; no file has been read yet.</li><li>Choose two or more PDFs. Each file is read as an <code>ArrayBuffer</code> through the File API and parsed by PDF-lib in the tab.</li><li>Reorder the list. Drag a row, or focus it and use the arrow buttons — the keyboard path produces the same result.</li><li>Press merge. PDF-lib creates a new document and copies each page in list order.</li><li>Download the result. The Blob is created in memory and saved by the browser.</li></ol><p>If you want to confirm that nothing was uploaded, open DevTools → Network, clear the list, then merge. There is no request carrying file bytes. That is the whole verification.</p><h2 id=\"why-some-pdfs-refuse-to-merge\">Why some PDFs refuse to merge</h2><p>An encrypted PDF stores its page tree behind an encryption dictionary. Reading the pages requires the password, and the document may also restrict copying. PDF-lib will throw rather than produce a partially valid file, and the tool reports the file as unsupported.</p><p>That is the honest outcome. Guessing passwords, or silently dropping an encrypted input, would both be worse: the first is not a feature, and the second produces a document that looks complete and is not.</p><p>The same logic applies to damaged files. A truncated PDF may parse far enough to report a page count and then fail mid-copy. If that happens, the tool reports the error instead of handing you a file with missing pages.</p><h2 id=\"limitations-worth-knowing-before-you-start\">Limitations worth knowing before you start</h2><ul><li><strong>Digital signatures break.</strong> A signature covers the exact bytes of the original file. Any merge creates new bytes, so the signature no longer matches. If a signed document must stay verifiable, merge around it rather than through it.</li><li><strong>Document-level attachments stay behind.</strong> Embedded files belong to the document catalogue, not to a page, so they are not carried into the merged output.</li><li><strong>Bookmarks are not rebuilt.</strong> Named destinations that point at page objects still resolve, but the outline tree is not merged into a new hierarchy.</li><li><strong>Memory is finite.</strong> Each source document must be parsed at once. A handful of large scans can exhaust a tab, which is why the tool warns above a conservative size threshold rather than promising unlimited input.</li></ul><h2 id=\"when-merging-is-the-wrong-tool\">When merging is the wrong tool</h2><p>If you need one file that contains several documents <em>as documents</em> — each with its own name, description and metadata — a PDF portfolio is the closer fit. If you need to remove pages rather than add them, use <a href=\"/tools/split-pdf/\">Split PDF</a> or <a href=\"/tools/extract-pdf-pages/\">Extract PDF Pages</a>. And if the goal is a smaller file rather than a combined one, merging will only make it bigger.</p><h2 id=\"faq\">FAQ</h2><p><strong>Does merging reduce image quality?</strong> No. Image streams are referenced, not re-encoded.</p><p><strong>Can I merge files of different page sizes?</strong> Yes. Each page keeps its own dimensions.</p><p><strong>What happens to form fields?</strong> Standard AcroForm fields are carried with their pages, but fields with the same name from different documents are not automatically reconciled into one logical form.</p><p><strong>Is there a file count limit?</strong> No fixed number. The practical limit is available memory, which is why the tool reports total pages before you run it.</p>"
+}
