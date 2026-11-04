@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PrismFile">
+  <rect width="64" height="64" rx="14" fill="#F4F6F7"/>
+  <path d="M32 10 54 21v22L32 54 10 43V21L32 10Z" fill="#FFFFFF" stroke="#355CDE" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M10 21 32 32l22-11M32 32v22" stroke="#355CDE" stroke-width="3" stroke-linejoin="round" opacity="0.55"/>
+  <path d="M32 10 54 21 32 32 10 21Z" fill="#355CDE" opacity="0.12"/>
+</svg>

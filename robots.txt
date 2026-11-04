@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# No admin route exists on this domain; the owner studio runs on 127.0.0.1 only.
+Disallow: /admin
+
+Sitemap: https://prismfile.app/sitemap-index.xml

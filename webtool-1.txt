@@ -1,0 +1,405 @@
+# FULL WEBSITE REDESIGN — AGENT IMPLEMENTATION PROMPT
+
+Mevcut web sitesi proje klasörünü baştan sona incele ve bütün web sitesini profesyonel, modern, futuristik ve minimal bir dijital dosya işleme platformuna dönüştür.
+
+**ÖNEMLİ: Sadece tasarım önerisi, Figma taslağı veya prototip oluşturma. Gerçek proje dosyalarında çalış, tasarımı uygula ve çalışan web sitesini yeniden oluştur.**
+
+Site ismini, marka kimliğini, mevcut araç isimlerini ve çalışan özellikleri koru. Yeni bir marka veya farklı bir ürün oluşturma. Görsel tasarımın hiçbir yerinde başka bir web sitesinin ismini kullanma.
+
+## 1. Önce mevcut projeyi incele
+
+Kod yazmaya başlamadan önce:
+
+- Projenin bütün klasörlerini incele.
+- Mevcut framework ve mimariyi belirle.
+- Ana sayfayı, navigasyonu ve footer yapısını incele.
+- 20 dosya işleme aracının tamamını incele.
+- PDF ve görsel işleme fonksiyonlarını incele.
+- Mevcut JavaScript modüllerini ve kullanılan kütüphaneleri tespit et.
+- CSS, fontlar, ikonlar ve görsel varlıkları incele.
+- SEO, metadata, canonical, sitemap ve iç bağlantıları kontrol et.
+- Mobil düzeni ve mevcut etkileşimleri analiz et.
+
+Mevcut arşiv yalnızca derlenmiş Astro çıktısı içeriyorsa orijinal kaynak kodu varmış gibi davranma. Öncelikle gerçek çalışma klasöründe kaynak kodu ara. Kaynak yoksa derlenmiş JavaScript ve HTML üzerinden işlevleri analiz et, sürdürülebilir kaynak mimarisi oluştur ve yeniden derlenebilir bir proje yapısı hazırla.
+
+Mevcut çalışan araçları kesinlikle kaybetme.
+
+## 2. Yeni görsel kimlik
+
+Yeni tasarım konsepti:
+
+**Precision Digital Atelier — Modern File Processing Laboratory**
+
+Klasik PDF dönüştürücü sitelerinin tasarımını kullanma. Hazır SaaS şablonlarından uzak dur.
+
+Görsel karakter:
+- Aydınlık, temiz ve teknolojik.
+- Futuristik minimal tasarım anlayışı.
+- Editoryal tipografi.
+- Geniş negatif alan ve dengeli sayfa kompozisyonları.
+- Kontrollü elektrik mavisi vurgular.
+- Gerçek dosya, belge ve dijital çalışma ortamlarını yansıtan fotoğraflar.
+- Gerçek dosya işleme arayüzlerini gösteren görsel alanlar.
+- Minimal ama karakterli arayüzler.
+- İçeriğin ve kullanılan aracın amacına uygun görsel seçimleri.
+- Tutarlı boşluk, hizalama ve tipografik hiyerarşi.
+
+**Görsel kullanımında kesin kurallar:**
+
+- Dekoratif SVG illüstrasyonlar, soyut geometrik şekiller, rastgele çizgiler, daireler, küreler, halkalar, poligonlar, wireframe yapıları ve anlamsız teknik desenler kullanma.
+- Sırf tasarımı doldurmak için soyut 3D nesneler, parçacık efektleri veya yapay veri akışları oluşturma.
+- CSS ile geometrik şekillerden oluşan dekoratif kompozisyonlar hazırlama.
+- Görsel alanları rastgele şekillerle, anlamsız çizgilerle veya işlevi olmayan teknik detaylarla doldurma.
+- Gerçek bir fotoğrafın veya ürün arayüzünün yerini dekoratif SVG çizimlerle doldurma.
+- Görseller, web sitesinin dijital dosya işleme amacını doğrudan desteklemeli.
+- Kullanılan fotoğraflar ilgili sayfanın içeriğiyle gerçekten bağlantılı olmalı.
+- Unsplash üzerinden yüksek kaliteli, gerçek fotoğraflar kullan. Unsplash görselleri isteğe bağlı değil, görsel kullanımının temel kaynaklarından biri olmalı.
+- Her sayfada aynı fotoğrafı veya benzer görsel kompozisyonu tekrar kullanma.
+- Görselleri yalnızca estetik amaçla değil, içeriği desteklemek ve kullanıcıya bağlam sağlamak için kullan.
+- Fotoğraf kullanılmasının anlamlı olmadığı araç arayüzlerinde fotoğraf eklemek zorunda değilsin. Bu alanlarda gerçek araç arayüzünü, dosya önizlemesini ve işlem sonuçlarını öne çıkar.
+- Fotoğrafları uygun oranlarda kırp, responsive kullan ve lazy loading uygula.
+- Her görsele içeriği doğru açıklayan alt metin ekle.
+- Görsel yüklenemediğinde sayfa düzenini bozmayan fallback kullan.
+
+## 3. Renk paleti
+
+| Kullanım | Renk |
+|---|---|
+| Ana arka plan | #F5F7FA |
+| İçerik yüzeyi | #FFFFFF |
+| İkincil yüzey | #EDF1F6 |
+| Teknik yüzey | #E9F0FA |
+| Ana metin | #172334 |
+| İkincil metin | #697586 |
+| Kenarlık | #DCE3EC |
+| Ana vurgu | #315BFF |
+| İkincil vurgu | #21B6C9 |
+| Sıcak detay | #F0A36B |
+| Veri noktası | #C8E96B |
+| Başarılı işlem | #17856F |
+| Hata | #D95F65 |
+
+Beyaz ve açık yüzeyler tasarımın temelini oluşturmalı. Büyük siyah veya koyu arka planlı bölümler kullanma.
+
+Mor-pembe gradientler, aşırı cam efektleri, neon parlamalar ve her bölümü aynı kart tasarımına dönüştüren SaaS şablonlarından kaçın.
+
+## 4. Tipografi
+
+Mevcut font dosyalarını incele.
+
+Geist, Manrope ve IBM Plex Mono mevcutsa görevlerine uygun şekilde kullan.
+
+- Geist: Başlıklar ve güçlü arayüz metinleri.
+- Manrope: Gövde metinleri, açıklamalar ve navigasyon.
+- IBM Plex Mono: Dosya boyutları, ölçüler, formatlar, işlem süreleri, teknik değerler ve metadata.
+
+Başlıklar büyük ve karakterli olmalı. Hero başlığı masaüstünde yaklaşık 64–90 px aralığında ölçeklenebilir.
+
+Gövde metinleri rahat okunmalı. Teknik açıklamalar ve yardımcı bilgiler daha küçük bir hiyerarşide yer almalı.
+
+## 5. Ana sayfa tasarımı
+
+Ana sayfanın kompozisyonunu tamamen yeniden oluştur.
+
+Önerilen yapı:
+
+1. Minimal navigasyon.
+2. Güçlü tipografik hero.
+3. İnteraktif dosya yükleme ve dosya algılama alanı.
+4. Gerçek dosya işleme arayüzünü ve belge önizlemesini gösteren görsel bölüm.
+5. PDF araçları koleksiyonu.
+6. Görsel işleme araçları koleksiyonu.
+7. Dosya gizliliği ve tarayıcıda yerel işlemeyi açıklayan görsel bölüm.
+8. Dosya işleme sürecini anlatan interaktif alan.
+9. Popüler araçlar.
+10. Eğitim ve rehber içerikleri.
+11. Güven, metodoloji ve footer.
+
+Hero tasarımında web sitesinin gerçek amacına uygun, yüksek kaliteli Unsplash fotoğrafları veya gerçek ürün arayüzü görselleri kullan.
+
+Hero alanında:
+- Güçlü ve özgün tipografik düzen oluştur.
+- Dosya yükleme alanını görsel hiyerarşinin önemli bir parçası yap.
+- Gerçek PDF sayfa önizlemeleri veya dosya işleme arayüzü göster.
+- Dosya türlerini ve işleme seçeneklerini gerçek arayüz bileşenleriyle sun.
+- Görsel ve metin arasında dengeli bir kompozisyon oluştur.
+- Görsel alanın ürünün gerçek amacını açıkça anlatmasını sağla.
+
+Soyut belge geometrileri, havada duran rastgele sayfalar, dekoratif 3D katmanlar veya yalnızca görsel amaçlı oluşturulmuş teknik kompozisyonlar kullanma.
+
+## 6. Animasyonlar ve etkileşimler
+
+GSAP ve ScrollTrigger kullanarak sayfa genelinde kontrollü animasyon sistemi oluştur.
+
+Kullanılabilecek animasyonlar:
+
+- Hero başlığının karakterli şekilde ortaya çıkması.
+- Gerçek ürün görsellerinin ve arayüz alanlarının yumuşak şekilde görünmesi.
+- Dosya yükleme alanının scroll ile görünmesi.
+- Araç koleksiyonlarının aşamalı ortaya çıkması.
+- Gerçek dosya önizlemelerinin ve işlem sonuçlarının kontrollü şekilde gösterilmesi.
+- Gizlilik bölümünde tarayıcı içi işlem akışının gerçek arayüz öğeleriyle açıklanması.
+- Eğitim ve içerik alanlarının aşamalı görünmesi.
+- Sayfa geçişlerinde yumuşak ve kısa hareketler.
+
+ScrollTrigger ile bazı bölümlerde pin ve kontrollü yatay hareket kullanılabilir. Ancak tüm sayfayı sürekli hareket ettirme.
+
+**Animasyonlarda kullanma:**
+- Dekoratif geometrik şekillerin oluşması.
+- Rastgele çizgilerin ve teknik desenlerin çizilmesi.
+- Küre, halka, poligon veya parçacık animasyonları.
+- Anlamsız veri akışı efektleri.
+- Gerçek bir işlevi olmayan soyut 3D nesne hareketleri.
+- İçeriğin okunmasını zorlaştıran sürekli hareketler.
+
+Animasyonlar:
+- Performanslı olmalı.
+- Gereksiz DOM animasyonları içermemeli.
+- Mobilde sadeleşmeli.
+- Sayfa içeriğinin okunmasını engellememeli.
+- Reduced motion ayarına uymalı.
+- Component unmount olduğunda temizlenmeli.
+
+## 7. Bütün araç sayfalarını yeniden tasarla
+
+Mevcut 20 aracın tamamını yeniden tasarla. Hiçbir aracı kaldırma veya statik örneğe dönüştürme.
+
+PDF araçları:
+
+- Merge PDF
+- Split PDF
+- Reorder PDF Pages
+- Extract PDF Pages
+- Rotate PDF
+- Compress PDF
+- Add PDF Page Numbers
+- Add PDF Watermark
+- PDF Text Extractor
+- PDF Metadata Viewer & Cleaner
+- PDF to Images
+- Images to PDF
+
+Görsel araçları:
+
+- Image Compressor
+- Image Cropper
+- Image Resizer
+- Image Format Converter
+- Image Color Picker
+- Image Palette Extractor
+- Remove Image Metadata / EXIF
+- Favicon Generator
+
+Her araç sayfasında:
+- Minimal breadcrumb.
+- Net araç başlığı.
+- Kısa açıklama.
+- Büyük ve anlaşılır dosya yükleme alanı.
+- Dosya seçildikten sonra gerçek dosya önizlemesi.
+- Araç parametreleri.
+- İşlem durumu.
+- İşlem sonucu.
+- İndirme alanı.
+- Teknik açıklama.
+- Kullanım örneği.
+- Gizlilik ve sınırlamalar.
+- İlgili araçlar.
+- SSS bölümü.
+
+Araç arayüzleri aynı temel tasarım sistemini paylaşmalı fakat her aracın kendi iş akışına göre farklılaşmalı.
+
+Araç sayfalarında dekoratif görseller yerine gerçek araç arayüzüne odaklan. Dosya önizlemeleri, işlem seçenekleri, gerçek sonuçlar ve indirme alanları tasarımın ana görsel unsurları olmalı.
+
+Örneğin:
+
+Merge PDF:
+- Dosyaların sürükle bırak ile sıralanması.
+- Sayfa sayısı ve dosya boyutlarının gösterilmesi.
+- Sıralama animasyonu.
+- Birleştirme işleminin ilerleme durumu.
+
+Compress PDF:
+- Önceki ve sonraki dosya boyutu karşılaştırması.
+- Gerçek sıkıştırma oranı.
+- Kalite parametreleri.
+- İşlem sonucu karşılaştırması.
+
+Image Cropper:
+- Gerçek görsel önizlemesi.
+- Etkileşimli crop alanı.
+- Oran seçimi.
+- Gerçek kırpma koordinatları.
+
+Image Color Picker:
+- Görsel üzerinde gerçek renk seçimi.
+- HEX, RGB ve diğer desteklenen renk değerleri.
+- Renk örnekleri.
+
+Image Palette Extractor:
+- Görselden gerçekten çıkarılmış renk paleti.
+- Renklerin kopyalanması.
+- Renk değerlerinin gösterilmesi.
+
+## 8. Araç kataloğu ve keşif
+
+Tüm araçların bulunduğu sayfayı yeniden tasarla.
+
+Kategoriler:
+- PDF Documents
+- Images & Metadata
+- Color & Palettes
+
+Araç kataloğu sıradan kartlardan oluşmasın.
+
+Alternatif kompozisyonlar kullan:
+- Büyük tipografik kategori başlıkları.
+- İkon ve araç isimleri.
+- Minimal satır listeleri.
+- Hover sırasında küçük ve işlevsel arayüz etkileşimleri.
+- Araç açıklamaları.
+- Arama ve filtreleme.
+- Popüler araçların farklı biçimde vurgulanması.
+
+Dekoratif geometrik animasyonlar veya rastgele şekiller kullanma. Araçların kendi ikonları, isimleri, açıklamaları ve gerçek işlevleri üzerinden özgün bir katalog tasarımı oluştur.
+
+Mevcut arama, command search ve navigasyon davranışlarını koru.
+
+## 9. Eğitim ve içerik sayfaları
+
+Mevcut Training sayfalarının tamamını yeniden tasarla.
+
+Eğitim içerikleri:
+- How to merge PDFs in your browser.
+- JPEG quality vs dimensions.
+- Merge vs portfolio vs attachment.
+- PDF compression.
+- Text PDFs vs scanned PDFs.
+- EXIF metadata.
+- Her aracın kendi eğitim sayfaları.
+
+Bu alanlar editoryal bir teknoloji yayını gibi görünmeli.
+
+İçerik alanında:
+- Rahat okuma genişliği.
+- Büyük makale başlıkları.
+- İçindekiler navigasyonu.
+- Gerçek fotoğraflar ve konuya uygun görsel örnekler.
+- Karşılaştırma tabloları.
+- Gerçek işlem örnekleri.
+- Gerektiğinde Unsplash görselleri.
+
+Fotoğraflar makalenin konusuyla doğrudan ilişkili olmalı. Örneğin PDF belgeleri, dijital çalışma ortamları, doküman yönetimi veya görsel düzenleme konularını anlatan içeriklerde konuyla uyumlu fotoğraflar seç.
+
+Dekoratif SVG illüstrasyonlar, soyut geometrik diyagramlar, rastgele şekiller veya anlamsız teknik çizimler kullanma.
+
+Teknik bilgiyi anlatmak için gerektiğinde gerçek ekran görüntüleri, araç arayüzleri, karşılaştırma tabloları, formüller ve işlem örnekleri kullan.
+
+Görselleri rastgele ekleme. Her görsel içerikle anlamlı bir ilişki kurmalı.
+
+## 10. Diğer sayfalar
+
+Aşağıdaki sayfaların tamamını tasarım sistemine dahil et:
+
+- Ana sayfa
+- All Tools
+- Popular
+- PDF Category
+- Image Category
+- Color Category
+- About
+- Contact
+- Changelog
+- How Local Processing Works
+- Methodology
+- Privacy
+- Privacy Policy
+- Terms
+- 404
+- Training ana sayfası
+- Tool bazlı eğitim sayfaları
+- SEO ve içerik sayfaları
+
+Hiçbir URL'yi silme veya gereksiz yere değiştirme.
+
+Bütün sayfalarda aynı tasarım dilini koru. Ancak her sayfanın içeriğine ve amacına göre farklı görsel kompozisyonlar oluştur.
+
+Görselleri sayfa içeriğine göre seç. Her sayfaya zorunlu olarak fotoğraf veya dekoratif görsel ekleme. Gerçek bir görselin katkı sağlamadığı alanlarda tipografi, içerik ve işlevsel arayüz öğelerini öne çıkar.
+
+## 11. En önemli kural: Dosyalar sunucuya yüklenmemeli
+
+Bu ürünün temel özelliği dosyaların tarayıcı içerisinde işlenmesidir.
+
+Bütün mevcut güvenlik ve gizlilik davranışlarını koru.
+
+- PDF işlemlerinde mevcut PDF-lib ve PDF.js işlevlerini koru.
+- JSZip gibi mevcut bağımlılıkları incele.
+- File API, Canvas, Blob ve Object URL kullanımını koru.
+- Dosya verilerini üçüncü taraf sunuculara gönderme.
+- Gereksiz network isteği oluşturma.
+- Dosya işleme işlemlerini gerçek dosya üzerinde gerçekleştir.
+- Hataları kullanıcıya anlaşılır biçimde göster.
+- Büyük dosyalarda bellek kullanımını kontrol et.
+
+Dosya yükleme alanını görsel olarak güzelleştirirken gerçek işlem mantığını bozma.
+
+## 12. Responsive tasarım
+
+Şu genişlikleri kontrol et:
+
+360, 390, 430, 768, 1024, 1280 ve 1440 px.
+
+Mobilde:
+- Araç arayüzleri dikey akışa dönüşmeli.
+- Dosya yükleme alanları dokunmatik kullanıma uygun olmalı.
+- Önizlemeler ekran dışına taşmamalı.
+- Tablo ve işlem sonuçları okunmalı.
+- Görseller uygun ölçülerde gösterilmeli ve gereksiz alan kaplamamalı.
+- Animasyonlar hafiflemeli.
+- Navigasyon mobil menüye dönüşmeli.
+
+## 13. Test ve teslim
+
+Bütün araçları gerçek dosyalarla test et.
+
+Özellikle:
+- PDF birleştirme.
+- PDF bölme.
+- Sayfa sıralama.
+- Sayfa döndürme.
+- PDF sıkıştırma.
+- PDF'den görsele dönüştürme.
+- Görselden PDF oluşturma.
+- Görsel kırpma.
+- Görsel boyutlandırma.
+- Metadata temizleme.
+- Renk seçimi.
+- Palet çıkarma.
+
+Ayrıca:
+- Bütün URL'leri kontrol et.
+- 404 durumunu test et.
+- Mobil responsive kontrol yap.
+- JavaScript hatalarını kontrol et.
+- Network isteklerini incele.
+- Kullanılan görsellerin yüklenmesini kontrol et.
+- GSAP animasyonlarının temizlenmesini kontrol et.
+- Görsel yüklenmelerini kontrol et.
+- SEO metadata ve canonical bağlantılarını doğrula.
+
+## SON TALİMAT
+
+Bu projeyi sıradan bir online PDF araçları sitesine dönüştürme.
+
+Ortaya çıkan ürün, gerçek bir dijital dosya işleme laboratuvarı gibi görünmeli.
+
+Aydınlık ve futuristik minimal tasarım, güçlü tipografi, gerçek ve konuya uygun fotoğraflar, gerçek dosya önizlemeleri, özgün araç arayüzleri ve hassas mikro etkileşimler kullan.
+
+Dekoratif SVG illüstrasyonlar, soyut geometrik şekiller, rastgele 3D nesneler, küreler, halkalar, poligonlar, wireframe yapıları, parçacıklar ve anlamsız görsel efektler oluşturma.
+
+Görsel tasarımın merkezinde gerçek ürün arayüzleri, dosya işleme deneyimi ve sayfa içeriğiyle ilişkili fotoğraflar bulunmalı.
+
+Ancak kullanıcıların dosyalarını işlediği alanlarda hız, kullanılabilirlik ve güvenilirlik her zaman görsel efektlerden daha önemli olsun.
+
+Tüm değişiklikleri gerçek proje dosyalarına uygula. Çalışan işlevleri koru. Test edilmemiş özellikleri başarılı olarak raporlama.
+
+İş sonunda değiştirilen dosyaları, korunan işlevleri, kullanılan animasyonları ve test sonuçlarını raporla.

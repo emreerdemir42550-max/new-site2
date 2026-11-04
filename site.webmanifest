@@ -1,0 +1,14 @@
+{
+  "name": "PrismFile — private file tools",
+  "short_name": "PrismFile",
+  "description": "Browser-local PDF and image tools. Your files never leave the browser.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f6f7",
+  "theme_color": "#355cde",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}

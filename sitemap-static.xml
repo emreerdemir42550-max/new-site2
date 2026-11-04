@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://prismfile.app/</loc><priority>1</priority></url>
+  <url><loc>https://prismfile.app/privacy/</loc><priority>0.5</priority></url>
+  <url><loc>https://prismfile.app/how-local-processing-works/</loc><priority>0.7</priority></url>
+  <url><loc>https://prismfile.app/methodology/</loc><priority>0.5</priority></url>
+  <url><loc>https://prismfile.app/about/</loc><priority>0.5</priority></url>
+  <url><loc>https://prismfile.app/changelog/</loc><priority>0.4</priority></url>
+  <url><loc>https://prismfile.app/contact/</loc><priority>0.4</priority></url>
+  <url><loc>https://prismfile.app/legal/privacy/</loc><priority>0.3</priority></url>
+  <url><loc>https://prismfile.app/legal/terms/</loc><priority>0.3</priority></url>
+</urlset>
